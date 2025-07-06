@@ -1,1 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+
+/* (1) استيراد الخط من جوجل */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+/* (2) تعريف الألوان الأساسية لنون كمتغيرات CSS */
+:root {
+  --noon-yellow: #feee00;
+  --noon-teal: #00c1c2;
+  --noon-dark: #222222;
+  --noon-light-gray: #f7f7f7;
+  --noon-text: #333;
+}
+
+/* (3) تطبيق الخط والألوان الأساسية على كامل التطبيق */
+body {
+  margin: 0;
+  font-family: 'Cairo', sans-serif;
+  /* تطبيق الخط الجديد */
+  background-color: #fff;
+  /* خلفية بيضاء بدلاً من الرمادي الفاتح */
+  color: var(--noon-text);
+}
