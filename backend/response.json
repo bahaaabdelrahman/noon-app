@@ -1,0 +1,41 @@
+{
+    "success": true,
+    "data": {
+        "user": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john.doe.unique@example.com",
+            "avatar": null,
+            "role": "customer",
+            "isActive": true,
+            "emailVerified": false,
+            "loginAttempts": 0,
+            "preferences": {
+                "notifications": {
+                    "email": true,
+                    "sms": false
+                },
+                "newsletter": true,
+                "currency": "USD",
+                "language": "en"
+            },
+            "_id": "685690ae567a8829e37a70da",
+            "addresses": [],
+            "createdAt": "2025-06-21T10:59:58.573Z",
+            "updatedAt": "2025-06-21T10:59:59.246Z",
+            "__v": 0,
+            "emailVerificationToken": "06e0f472ac4fa2d10ea0ba1e774a15f0c6a7afed72ea48be5d6b7c0c7b953c1b",
+            "emailVerificationExpires": "2025-06-22T10:59:59.245Z",
+            "fullName": "John Doe",
+            "isLocked": false,
+            "id": "685690ae567a8829e37a70da"
+        },
+        "tokens": {
+            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODU2OTBhZTU2N2E4ODI5ZTM3YTcwZGEiLCJpYXQiOjE3NTA1MDM1OTksImV4cCI6MTc1MDU4OTk5OSwiYXVkIjoiZWNvbW1lcmNlLWNsaWVudCIsImlzcyI6ImVjb21tZXJjZS1hcGkifQ.DBEjai0rSK0ZokuxZcbzUz1VpUt80Kd5OiKNyBZj9EE",
+            "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODU2OTBhZTU2N2E4ODI5ZTM3YTcwZGEiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTc1MDUwMzU5OSwiZXhwIjoxNzUxMTA4Mzk5LCJhdWQiOiJlY29tbWVyY2UtY2xpZW50IiwiaXNzIjoiZWNvbW1lcmNlLWFwaSJ9.3D26aJylnlSDnpLVD8E_zAXGKCs1fOMxzvlqHLC0iyE",
+            "tokenType": "Bearer",
+            "expiresIn": "24h"
+        }
+    },
+    "message": "Registration successful. Please verify your email."
+}
