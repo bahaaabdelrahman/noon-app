@@ -6,7 +6,7 @@ This is a comprehensive e-commerce application that combines an Angular frontend
 
 ```
 noon-app/
-├── src/               # Angular frontend application (root level)
+├── frontend/          # Angular frontend application
 ├── backend/           # Node.js backend API
 ├── README.md          # This file
 └── .gitignore         # Git ignore rules
@@ -100,6 +100,7 @@ cd noon-app
 2. Install frontend dependencies:
 
 ```bash
+cd frontend
 npm install
 ```
 
@@ -122,6 +123,7 @@ npm start
 2. In a new terminal, start the frontend application:
 
 ```bash
+cd frontend
 ng serve
 ```
 

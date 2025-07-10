@@ -2,7 +2,6 @@
 
 # Dependencies
 node_modules/
-/node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -79,18 +78,3 @@ test-output.log
 /libpeerconnection.log
 testem.log
 /typings
-
-# Node
-npm-debug.log
-yarn-error.log
-
-# Miscellaneous
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-
-# System files
-.DS_Store
-Thumbs.db
