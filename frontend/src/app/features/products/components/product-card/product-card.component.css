@@ -1,0 +1,81 @@
+/* src/app/features/products/components/product-card/product-card.component.css */
+.noon-product-card {
+  border: 1px solid #eee;
+  border-radius: 5px;
+  background-color: #fff;
+  text-align: right;
+  /* محاذاة لليمين للعربية */
+  transition: box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.noon-product-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-image-wrapper {
+  padding: 20px;
+  height: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-image-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.card-content {
+  padding: 15px;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  /* لجعل هذا الجزء يملأ المساحة المتبقية */
+}
+
+.product-title {
+  font-size: 14px;
+  color: var(--noon-text);
+  line-height: 1.4;
+  /* لتحديد ارتفاع العنوان وتجنب تغير حجم البطاقة */
+  height: 58px;
+  overflow: hidden;
+  margin-bottom: auto;
+  /* يدفع السعر والزر للأسفل */
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--noon-dark);
+  margin: 10px 0;
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--noon-teal);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Cairo', sans-serif;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #00a1a2;
+}
+
+.add-to-cart-btn mat-icon {
+  margin-left: 8px;
+}

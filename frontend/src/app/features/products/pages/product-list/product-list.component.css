@@ -1,0 +1,24 @@
+/* src/app/features/products/pages/product-list/product-list.component.css */
+
+.product-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.center-spinner,
+.error-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  grid-column: 1 / -1;
+  /* لجعل العنصر يأخذ عرض الشبكة بالكامل */
+}
+
+.error-message {
+  color: #f44336;
+  /* لون أحمر */
+  font-size: 1.2rem;
+}
