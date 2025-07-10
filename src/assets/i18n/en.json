@@ -1,0 +1,41 @@
+{
+  "ENGLISH": "English",
+  "ARABIC": "العربية",
+  "DELIVERY_TO": "Deliver to",
+  "CAIRO": "cairo",
+  "LOGIN": "Log in",
+  "SEARCH_PLACEHOLDER": "What are you looking for ?",
+  "ADD_TO_CART": "Add to Cart",
+
+  "ELECTRONICS": "Electronics",
+  "WOMEN_FASHION": "Women Fashion",
+  "MEN_FASHION": "Men Fashion",
+  "KIDS_FASHION": "Kids Fashion",
+  "BEAUTY": "Beauty & Perfume",
+  "HOME_APPLIANCES": "Home & Appliances",
+  "BABY": "Baby",
+  "TOYS": "Toys",
+  "GROCERY": "Grocery",
+  "AUTOMOTIVE": "Automotive",
+  "HEALTH": "Health & Nutrition",
+  "SPORTS": "Sports",
+  "BOOKS_STATIONERY": "Books & Stationery",
+
+  "PHONES_TABLETS": "Phones & Tablets",
+  "PHONES": "Phones",
+  "TABLETS": "Tablets",
+  "POWER_BANKS": "Power Banks",
+  "WEARABLES": "Wearables",
+
+  "LAPTOPS_COMPUTERS": "Laptops & Computers",
+  "LAPTOPS": "Laptops",
+  "MONITORS": "Monitors",
+  "PRINTERS_SCANNERS": "Printers & Scanners",
+  "STORAGE": "Storage Devices",
+
+  "HOME_DEVICES": "Home Devices",
+  "TVS": "TVs",
+  "FRIDGES": "Fridges",
+  "WASHING_MACHINES": "Washing Machines",
+  "MICROWAVES": "Microwave"
+}

@@ -1,0 +1,55 @@
+<div class="all-sections-wrapper">
+  <div *ngFor="let section of sections" class="single-section">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.title }}</h2>
+      <button class="view-all-btn">شوف كله</button>
+    </div>
+
+    <div class="images-row">
+      <div class="image-box" *ngFor="let img of images">
+        <img [src]="img" alt="منتج" />
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- قسم شوف فئات تانيه -->
+
+
+<div class="more-categories-wrapper">
+  <div class="more-categories-header">
+    <h2 class="section-title">شوف فئات تانية</h2>
+  </div>
+
+  <div class="more-categories-row">
+    <div class="category-box" *ngFor="let cat of otherCategories">
+      <img [src]="cat.img" />
+    </div>
+  </div>
+</div>
+
+
+
+<!-- قسم ماركات تحبها  -->
+
+
+<div class="brands-section-wrapper">
+  <h2 class="section-title center-title">ماركات تحبها</h2>
+
+  <div class="brands-slider-container">
+    <button class="arrow left" (click)="scrollLeft()">&#10094;</button>
+
+    <div class="brands-slider" #brandSlider>
+      <div class="brand-column" *ngFor="let column of brands">
+        <div class="brand-box" *ngFor="let brand of column">
+          <img [src]="brand" alt="Brand" />
+        </div>
+      </div>
+    </div>
+
+    <button class="arrow right" (click)="scrollRight()">&#10095;</button>
+  </div>
+</div>
+
+

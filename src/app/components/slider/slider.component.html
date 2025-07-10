@@ -1,0 +1,105 @@
+<div class="slider-container">
+  <img class="slider-overlay-img" src="https://f.nooncdn.com/mpcms/EN0003/assets/11cef2a3-7333-42f2-a26f-4d5b134506c4.png" alt="">
+  <!-- حاوية الصور -->
+  <div class="slider">
+    <!-- استخدام *ngFor لتوليد الصور ديناميكيًا -->
+    <div *ngFor="let slide of slides; let i = index" class="slide" [ngClass]="{'active': i === currentSlide}">
+      <img [src]="slide.src" [alt]="slide.alt">
+    </div>
+  </div>
+
+  <!-- أزرار التحكم (ربط الأحداث) -->
+  <button class="slider-btn prev-btn" (click)="prev()">❯</button>
+  <button class="slider-btn next-btn" (click)="next()">❮ </button>
+
+  <!-- نقاط التنقل -->
+  <div class="dots-container">
+    <!-- استخدام *ngFor لتوليد النقاط -->
+    <span *ngFor="let slide of slides; let i = index" class="dot" [ngClass]="{'active': i === currentSlide}"
+      (click)="goToSlide(i)">
+    </span>
+  </div>
+
+
+<!-- ======================= قسم التسوق حسب الفئة ======================= -->
+<section class="categories-section">
+  <div class="container">
+    <h2 class="section-title">تسوق حسب الفئة</h2>
+
+    <div class="categories-grid">
+
+      <!-- عنصر فئة 1: الجمال -->
+      <a href="/beauty" class="category-item">
+        <div class="category-image-wrapper">
+          <img src="https://f.nooncdn.com/mpcms/EN0003/assets/40d3d7f2-cf19-4ef0-9924-3ef8ce97916e.png" alt="الجمال">
+        </div>
+        <span class="category-label">الجمال</span>
+      </a>
+
+      <!-- عنصر فئة 2: أجهزة منزلية -->
+      <a href="/home-appliances" class="category-item">
+        <div class="category-image-wrapper">
+          <img src="https://f.nooncdn.com/mpcms/EN0003/assets/826db229-9dbb-4b0b-b2db-112d6239bc12.png"
+            alt="أجهزة منزلية">
+        </div>
+        <span class="category-label">أجهزة منزلية</span>
+      </a>
+
+      <!-- عنصر فئة 3: تلفزيونات -->
+      <a href="/televisions" class="category-item">
+        <div class="category-image-wrapper">
+          <img src="https://f.nooncdn.com/mpcms/EN0003/assets/4e7e6fc0-ad0c-4194-b442-18e36fc04478.png" alt="تلفزيونات">
+        </div>
+        <span class="category-label">تلفزيونات</span>
+      </a>
+
+      <!-- عنصر فئة 4: الموبايلات -->
+      <a href="/mobiles" class="category-item">
+        <div class="category-image-wrapper">
+          <img src="https://f.nooncdn.com/mpcms/EN0003/assets/980dfde5-74f5-4f3c-a626-a997ef1438d9.png"
+            alt="الموبايلات">
+        </div>
+        <span class="category-label">الموبايلات</span>
+      </a>
+
+      <!-- عنصر فئة 5: البيت والمطبخ -->
+      <a href="/home-kitchen" class="category-item">
+        <div class="category-image-wrapper">
+          <img src="https://f.nooncdn.com/mpcms/EN0003/assets/374f65bb-ef1b-4fbc-a3c6-e0bb55454510.png"
+            alt="البيت والمطبخ">
+        </div>
+        <span class="category-label">البيت والمطبخ</span>
+      </a>
+
+      <!-- عنصر فئة 6: أزياء الأطفال -->
+      <a href="/kids-fashion" class="category-item">
+        <div class="category-image-wrapper">
+          <img src="https://f.nooncdn.com/mpcms/EN0003/assets/c4fd7675-14d6-4c76-aec8-d184290b1004.png"
+            alt="أزياء الأطفال">
+        </div>
+        <span class="category-label">أزياء الأطفال</span>
+      </a>
+
+      <!-- عنصر فئة 7: أزياء النساء -->
+      <a href="/women-fashion" class="category-item">
+        <div class="category-image-wrapper">
+          <img src="https://f.nooncdn.com/mpcms/EN0003/assets/9defde61-6ed0-4ddc-985a-101d5f4c9392.png"
+            alt="أزياء النساء">
+        </div>
+        <span class="category-label">أزياء النساء</span>
+      </a>
+
+      <!-- يمكنك إضافة المزيد من العناصر هنا بنفس الطريقة -->
+
+    </div>
+  </div>
+</section>
+
+
+
+
+
+</div>
+
+
+

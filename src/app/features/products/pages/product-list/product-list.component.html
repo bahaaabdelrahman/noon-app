@@ -1,0 +1,20 @@
+<!-- src/app/features/products/pages/product-list/product-list.component.html -->
+
+<div class="product-grid-container">
+  <!-- (3) استخدام async pipe لعرض البيانات عند وصولها -->
+  <ng-container *ngIf="products$ | async as products; else loadingOrError">
+    <!-- (4) حلقة لعرض بطاقة لكل منتج -->
+    <app-product-card *ngFor="let product of products" [product]="product">
+    </app-product-card>
+  </ng-container>
+
+  <!-- (5) قالب لعرض مؤشر التحميل أو رسالة الخطأ -->
+  <ng-template #loadingOrError>
+    <div *ngIf="!error; else errorTemplate" class="center-spinner">
+      <mat-spinner></mat-spinner>
+    </div>
+    <ng-template #errorTemplate>
+      <div class="error-message">{{ error }}</div>
+    </ng-template>
+  </ng-template>
+</div>
