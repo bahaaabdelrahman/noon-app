@@ -67,7 +67,11 @@ router.use(authenticate);
  *       401:
  *         description: Unauthorized
  */
-router.post('/addresses', validate(addAddressValidator), userController.addAddress);
+router.post(
+  '/addresses',
+  validate(addAddressValidator),
+  userController.addAddress
+);
 
 /**
  * @openapi
