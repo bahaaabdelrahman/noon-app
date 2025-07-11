@@ -126,12 +126,257 @@ router.put('/items/:itemId', optionalAuth, validate(updateCartItemValidator), ca
  */
 router.delete('/items/:itemId', optionalAuth, cartController.removeFromCart);
 
-// --- Other Cart Routes (placeholders) ---
+/**
+ * @openapi
+ * /cart/clear:
+ *   delete:
+ *     summary: Clear all items from cart
+ *     tags: [Shopping Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Cart cleared successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   $ref: '#/components/schemas/Cart'
+ */
 router.delete('/clear', optionalAuth, cartController.clearCart);
+
+/**
+ * @openapi
+ * /cart/coupon:
+ *   post:
+ *     summary: Apply a coupon to cart
+ *     tags: [Shopping Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - couponCode
+ *             properties:
+ *               couponCode:
+ *                 type: string
+ *                 example: "SAVE20"
+ *     responses:
+ *       200:
+ *         description: Coupon applied successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   allOf:
+ *                     - $ref: '#/components/schemas/Cart'
+ *                     - type: object
+ *                       properties:
+ *                         appliedCoupon:
+ *                           type: object
+ *                           properties:
+ *                             code:
+ *                               type: string
+ *                             discount:
+ *                               type: number
+ *                             discountType:
+ *                               type: string
+ *                               enum: [percentage, fixed]
+ *       400:
+ *         description: Invalid coupon code or coupon not applicable
+ *       404:
+ *         description: Coupon not found
+ */
 router.post('/coupon', optionalAuth, validate(applyCouponValidator), cartController.applyCoupon);
+
+/**
+ * @openapi
+ * /cart/coupon:
+ *   delete:
+ *     summary: Remove coupon from cart
+ *     tags: [Shopping Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Coupon removed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   $ref: '#/components/schemas/Cart'
+ */
 router.delete('/coupon', optionalAuth, cartController.removeCoupon);
+
+/**
+ * @openapi
+ * /cart/summary:
+ *   get:
+ *     summary: Get cart summary
+ *     tags: [Shopping Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Cart summary with totals
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     itemCount:
+ *                       type: integer
+ *                       example: 3
+ *                     subtotal:
+ *                       type: number
+ *                       example: 299.99
+ *                     tax:
+ *                       type: number
+ *                       example: 24.00
+ *                     shipping:
+ *                       type: number
+ *                       example: 9.99
+ *                     discount:
+ *                       type: number
+ *                       example: 30.00
+ *                     total:
+ *                       type: number
+ *                       example: 303.98
+ *                     appliedCoupon:
+ *                       type: object
+ *                       nullable: true
+ *                       properties:
+ *                         code:
+ *                           type: string
+ *                         discount:
+ *                           type: number
+ */
 router.get('/summary', optionalAuth, cartController.getCartSummary);
+
+/**
+ * @openapi
+ * /cart/validate:
+ *   post:
+ *     summary: Validate cart items
+ *     tags: [Shopping Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Validates cart items for availability, pricing, and other constraints
+ *     responses:
+ *       200:
+ *         description: Cart validation results
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     isValid:
+ *                       type: boolean
+ *                       example: true
+ *                     issues:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           productId:
+ *                             type: string
+ *                           issue:
+ *                             type: string
+ *                             enum: [out_of_stock, price_changed, product_unavailable]
+ *                           message:
+ *                             type: string
+ *                           oldPrice:
+ *                             type: number
+ *                           newPrice:
+ *                             type: number
+ *                     updatedCart:
+ *                       $ref: '#/components/schemas/Cart'
+ */
 router.post('/validate', optionalAuth, cartController.validateCart);
+
+/**
+ * @openapi
+ * /cart/merge:
+ *   post:
+ *     summary: Merge guest cart with user cart
+ *     tags: [Shopping Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Merges a guest cart with the authenticated user's cart
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - guestCartId
+ *             properties:
+ *               guestCartId:
+ *                 type: string
+ *                 example: "60d5ecb54b24c3001f8b4567"
+ *               mergeStrategy:
+ *                 type: string
+ *                 enum: [replace, merge, keep_existing]
+ *                 default: merge
+ *                 description: How to handle duplicate items
+ *     responses:
+ *       200:
+ *         description: Carts merged successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     mergedCart:
+ *                       $ref: '#/components/schemas/Cart'
+ *                     mergeResults:
+ *                       type: object
+ *                       properties:
+ *                         itemsMerged:
+ *                           type: integer
+ *                         itemsReplaced:
+ *                           type: integer
+ *                         itemsKept:
+ *                           type: integer
+ *       400:
+ *         description: Invalid guest cart ID
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Guest cart not found
+ */
 router.post('/merge', authenticate, cartController.mergeCart);
 
 module.exports = router;

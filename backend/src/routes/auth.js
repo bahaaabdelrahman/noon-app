@@ -124,33 +124,292 @@ router.post('/login', authLimiter, validateBody(loginSchema), authController.log
  */
 router.get('/me', authenticate, authController.getMe);
 
-// ... other routes with placeholder for future documentation ...
-
+/**
+ * @openapi
+ * /auth/logout:
+ *   post:
+ *     summary: Log out a user
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully logged out
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                   example: "Successfully logged out"
+ *       401:
+ *         description: Unauthorized, token is missing or invalid
+ */
 router.post('/logout', authenticate, authController.logout);
+
+/**
+ * @openapi
+ * /auth/refresh:
+ *   post:
+ *     summary: Refresh JWT token
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *     responses:
+ *       200:
+ *         description: Token refreshed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     token:
+ *                       type: string
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                     refreshToken:
+ *                       type: string
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       401:
+ *         description: Invalid or expired refresh token
+ */
 router.post(
   '/refresh',
   validateBody(refreshTokenSchema),
   authController.refreshToken
 );
+
+/**
+ * @openapi
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Request password reset
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: Password reset email sent
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset instructions sent to your email"
+ *       400:
+ *         description: Invalid email format
+ *       404:
+ *         description: User not found
+ *       429:
+ *         description: Too many requests, try again later
+ */
 router.post(
   '/forgot-password',
   passwordResetLimiter,
   validateBody(forgotPasswordSchema),
   authController.forgotPassword
 );
+
+/**
+ * @openapi
+ * /auth/reset-password:
+ *   post:
+ *     summary: Reset password with token
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - token
+ *               - password
+ *               - confirmPassword
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: "reset-token-from-email"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "NewSecurePassword123!"
+ *               confirmPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: "NewSecurePassword123!"
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset successfully"
+ *       400:
+ *         description: Invalid token or passwords don't match
+ *       429:
+ *         description: Too many requests, try again later
+ */
 router.post(
   '/reset-password',
   passwordResetLimiter,
   validateBody(resetPasswordSchema),
   authController.resetPassword
 );
+
+/**
+ * @openapi
+ * /auth/change-password:
+ *   post:
+ *     summary: Change password for authenticated user
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *               - confirmPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: "CurrentPassword123!"
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: "NewSecurePassword123!"
+ *               confirmPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: "NewSecurePassword123!"
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                   example: "Password changed successfully"
+ *       400:
+ *         description: Invalid current password or passwords don't match
+ *       401:
+ *         description: Unauthorized, token is missing or invalid
+ */
 router.post(
   '/change-password',
   authenticate,
   validateBody(changePasswordSchema),
   authController.changePassword
 );
+
+/**
+ * @openapi
+ * /auth/verify-email/{token}:
+ *   get:
+ *     summary: Verify email address
+ *     tags: [Authentication]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Email verification token
+ *     responses:
+ *       200:
+ *         description: Email verified successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                   example: "Email verified successfully"
+ *       400:
+ *         description: Invalid or expired token
+ *       404:
+ *         description: User not found
+ */
 router.get('/verify-email/:token', authController.verifyEmail);
+
+/**
+ * @openapi
+ * /auth/resend-verification:
+ *   post:
+ *     summary: Resend email verification
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Verification email sent
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                   example: "Verification email sent successfully"
+ *       400:
+ *         description: Email already verified
+ *       401:
+ *         description: Unauthorized, token is missing or invalid
+ */
 router.post(
   '/resend-verification',
   authenticate,
