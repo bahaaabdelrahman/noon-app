@@ -15,7 +15,13 @@
         "seed": "node scripts/seed.js",
         "seed:admin": "node scripts/seed-admin.js",
         "create:admin": "node scripts/create-admin.js",
-        "migrate": "node scripts/migrate.js"
+        "migrate": "node scripts/migrate.js",
+        "setup:frontend": "node scripts/setup-frontend-port.js",
+        "cors:add": "node scripts/cors-manager.js add",
+        "cors:remove": "node scripts/cors-manager.js remove",
+        "cors:show": "node scripts/cors-manager.js show",
+        "cors:set-primary": "node scripts/cors-manager.js set-primary",
+        "cors:reset": "node scripts/cors-manager.js reset"
     },
     "keywords": [],
     "author": "",
