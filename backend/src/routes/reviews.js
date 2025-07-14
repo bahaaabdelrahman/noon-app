@@ -78,29 +78,7 @@ router.get(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               rating:
- *                 type: integer
- *                 minimum: 1
- *                 maximum: 5
- *                 example: 4
- *               title:
- *                 type: string
- *                 example: "Great product!"
- *               comment:
- *                 type: string
- *                 example: "Really satisfied with this purchase. Good quality and fast delivery."
- *               pros:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["Great quality", "Fast delivery"]
- *               cons:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["A bit expensive"]
+ *             $ref: '#/components/schemas/UpdateReviewRequest'
  *     responses:
  *       200:
  *         description: Review updated successfully
@@ -201,8 +179,10 @@ router.delete(
  *                   properties:
  *                     helpfulCount:
  *                       type: integer
+ *                       example: 13
  *                     userMarkedHelpful:
  *                       type: boolean
+ *                       example: true
  *       400:
  *         description: User already marked this review as helpful
  *       401:
@@ -237,17 +217,7 @@ router.post(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - reason
- *             properties:
- *               reason:
- *                 type: string
- *                 enum: [spam, inappropriate, fake, offensive, other]
- *                 example: "inappropriate"
- *               description:
- *                 type: string
- *                 example: "Contains inappropriate language"
+ *             $ref: '#/components/schemas/FlagReviewRequest'
  *     responses:
  *       200:
  *         description: Review flagged successfully
@@ -452,17 +422,7 @@ router.get(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - status
- *             properties:
- *               status:
- *                 type: string
- *                 enum: [pending, approved, rejected, flagged]
- *                 example: "approved"
- *               adminNote:
- *                 type: string
- *                 example: "Review approved after moderation"
+ *             $ref: '#/components/schemas/UpdateReviewStatusRequest'
  *     responses:
  *       200:
  *         description: Review status updated successfully
@@ -499,32 +459,120 @@ module.exports = router;
  * @openapi
  * components:
  *   schemas:
- *     Review:
+ *     ReviewImage:
+ *       type: object
+ *       properties:
+ *         url:
+ *           type: string
+ *           example: "https://example.com/review-images/review1.jpg"
+ *         publicId:
+ *           type: string
+ *           example: "reviews/review1_image"
+ *         alt:
+ *           type: string
+ *           example: "Product image from customer review"
+ *
+ *     ReviewHelpful:
+ *       type: object
+ *       properties:
+ *         count:
+ *           type: integer
+ *           minimum: 0
+ *           example: 12
+ *         users:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["507f1f77bcf86cd799439011", "507f1f77bcf86cd799439012"]
+ *
+ *     ReviewFlags:
+ *       type: object
+ *       properties:
+ *         inappropriate:
+ *           type: object
+ *           properties:
+ *             count:
+ *               type: integer
+ *               minimum: 0
+ *               example: 2
+ *             users:
+ *               type: array
+ *               items:
+ *                 type: string
+ *               example: ["507f1f77bcf86cd799439013"]
+ *         spam:
+ *           type: object
+ *           properties:
+ *             count:
+ *               type: integer
+ *               minimum: 0
+ *               example: 1
+ *             users:
+ *               type: array
+ *               items:
+ *                 type: string
+ *               example: ["507f1f77bcf86cd799439014"]
+ *
+ *     ReviewResponse:
+ *       type: object
+ *       properties:
+ *         text:
+ *           type: string
+ *           maxLength: 500
+ *           example: "Thank you for your feedback! We're glad you enjoyed the product."
+ *         respondedBy:
+ *           type: string
+ *           example: "507f1f77bcf86cd799439015"
+ *         respondedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2024-01-16T10:30:00Z"
+ *
+ *     ReviewUser:
  *       type: object
  *       properties:
  *         _id:
  *           type: string
- *           example: 60d5ecb54b24c3001f8b4567
- *         user:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *             firstName:
- *               type: string
- *             lastName:
- *               type: string
- *             avatar:
- *               type: string
+ *           example: "507f1f77bcf86cd799439011"
+ *         firstName:
+ *           type: string
+ *           example: "John"
+ *         lastName:
+ *           type: string
+ *           example: "D."
+ *         avatar:
+ *           type: string
+ *           example: "https://example.com/avatars/user1.jpg"
+ *
+ *     ReviewProduct:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "507f1f77bcf86cd799439016"
+ *         name:
+ *           type: string
+ *           example: "Wireless Headphones"
+ *         slug:
+ *           type: string
+ *           example: "wireless-headphones"
+ *
+ *     Review:
+ *       type: object
+ *       required:
+ *         - product
+ *         - user
+ *         - rating
+ *         - title
+ *         - comment
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "60d5ecb54b24c3001f8b4567"
  *         product:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *             name:
- *               type: string
- *             slug:
- *               type: string
+ *           $ref: '#/components/schemas/ReviewProduct'
+ *         user:
+ *           $ref: '#/components/schemas/ReviewUser'
  *         rating:
  *           type: integer
  *           minimum: 1
@@ -532,62 +580,131 @@ module.exports = router;
  *           example: 4
  *         title:
  *           type: string
+ *           maxLength: 100
  *           example: "Great product!"
  *         comment:
  *           type: string
- *           example: "Really satisfied with this purchase."
- *         pros:
- *           type: array
- *           items:
- *             type: string
- *           example: ["Great quality", "Fast delivery"]
- *         cons:
- *           type: array
- *           items:
- *             type: string
- *           example: ["A bit expensive"]
- *         helpfulCount:
- *           type: integer
- *           example: 12
- *         verifiedPurchase:
+ *           maxLength: 1000
+ *           example: "Really satisfied with this purchase. The quality exceeded my expectations and delivery was fast."
+ *         verified:
  *           type: boolean
  *           example: true
+ *           description: "Whether this is a verified purchase review"
+ *         helpful:
+ *           $ref: '#/components/schemas/ReviewHelpful'
+ *         images:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/ReviewImage'
+ *         status:
+ *           type: string
+ *           enum: [pending, approved, rejected, flagged]
+ *           example: "approved"
+ *         moderationReason:
+ *           type: string
+ *           example: "Review contains inappropriate language"
+ *         flags:
+ *           $ref: '#/components/schemas/ReviewFlags'
+ *         response:
+ *           $ref: '#/components/schemas/ReviewResponse'
  *         createdAt:
  *           type: string
  *           format: date-time
+ *           example: "2024-01-15T10:30:00Z"
  *         updatedAt:
  *           type: string
  *           format: date-time
- *     AdminReview:
+ *           example: "2024-01-15T10:30:00Z"
+ *         # Virtual fields (computed)
+ *         age:
+ *           type: integer
+ *           readOnly: true
+ *           example: 5
+ *           description: "Age of the review in days"
+ *         helpfulPercentage:
+ *           type: integer
+ *           readOnly: true
+ *           example: 85
+ *           description: "Percentage of users who found this review helpful"
+ * *     AdminReview:
  *       allOf:
  *         - $ref: '#/components/schemas/Review'
  *         - type: object
  *           properties:
- *             status:
- *               type: string
- *               enum: [pending, approved, rejected, flagged]
- *               example: "approved"
- *             flags:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   user:
- *                     type: string
- *                   reason:
- *                     type: string
- *                   description:
- *                     type: string
- *                   createdAt:
- *                     type: string
- *                     format: date-time
  *             adminNote:
  *               type: string
  *               example: "Review approved after moderation"
  *             moderatedBy:
  *               type: string
- *               example: 60d5ecb54b24c3001f8b4568
+ *               example: "60d5ecb54b24c3001f8b4568"
  *             moderatedAt:
  *               type: string
  *               format: date-time
+ *               example: "2024-01-16T12:00:00Z"
+ *
+ *     CreateReviewRequest:
+ *       type: object
+ *       required:
+ *         - rating
+ *         - title
+ *         - comment
+ *       properties:
+ *         rating:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 5
+ *           example: 4
+ *         title:
+ *           type: string
+ *           maxLength: 100
+ *           example: "Great product!"
+ *         comment:
+ *           type: string
+ *           maxLength: 1000
+ *           example: "Really satisfied with this purchase. Good quality and fast delivery."
+ *
+ *     UpdateReviewRequest:
+ *       type: object
+ *       properties:
+ *         rating:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 5
+ *           example: 4
+ *         title:
+ *           type: string
+ *           maxLength: 100
+ *           example: "Great product!"
+ *         comment:
+ *           type: string
+ *           maxLength: 1000
+ *           example: "Really satisfied with this purchase. Good quality and fast delivery."
+ *
+ *     FlagReviewRequest:
+ *       type: object
+ *       required:
+ *         - reason
+ *       properties:
+ *         reason:
+ *           type: string
+ *           enum: [spam, inappropriate, fake, offensive, other]
+ *           example: "inappropriate"
+ *         description:
+ *           type: string
+ *           maxLength: 200
+ *           example: "Contains inappropriate language"
+ *
+ *     UpdateReviewStatusRequest:
+ *       type: object
+ *       required:
+ *         - status
+ *       properties:
+ *         status:
+ *           type: string
+ *           enum: [pending, approved, rejected, flagged]
+ *           example: "approved"
+ *         adminNote:
+ *           type: string
+ *           maxLength: 500
+ *           example: "Review approved after moderation"
  */
