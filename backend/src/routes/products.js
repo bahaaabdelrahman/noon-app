@@ -3,9 +3,20 @@ const router = express.Router();
 const productController = require('../controllers/productController');
 const reviewController = require('../controllers/reviewController');
 const { authenticate, authorize } = require('../middleware/auth');
-const { validateBody, validateParams, validateQuery } = require('../middleware/validation');
-const { createReviewSchema, reviewQuerySchema, productIdSchema } = require('../validators/reviewValidator');
-const { uploadProductImages, handleMulterError } = require('../middleware/upload');
+const {
+  validateBody,
+  validateParams,
+  validateQuery,
+} = require('../middleware/validation');
+const {
+  createReviewSchema,
+  reviewQuerySchema,
+  productIdSchema,
+} = require('../validators/reviewValidator');
+const {
+  uploadProductImages,
+  handleMulterError,
+} = require('../middleware/upload');
 
 /**
  * @openapi
@@ -347,7 +358,12 @@ router.get('/search', productController.searchProducts);
  *       404:
  *         description: Product not found
  */
-router.get('/:productId/reviews', validateParams(productIdSchema), validateQuery(reviewQuerySchema), reviewController.getProductReviews);
+router.get(
+  '/:productId/reviews',
+  validateParams(productIdSchema),
+  validateQuery(reviewQuerySchema),
+  reviewController.getProductReviews
+);
 
 /**
  * @openapi
@@ -405,7 +421,13 @@ router.get('/:productId/reviews', validateParams(productIdSchema), validateQuery
  *       404:
  *         description: Product not found
  */
-router.post('/:productId/reviews', authenticate, validateParams(productIdSchema), validateBody(createReviewSchema), reviewController.createReview);
+router.post(
+  '/:productId/reviews',
+  authenticate,
+  validateParams(productIdSchema),
+  validateBody(createReviewSchema),
+  reviewController.createReview
+);
 
 // --- Admin Routes ---
 router.use(authenticate);
@@ -644,7 +666,12 @@ router.delete('/:id', productController.deleteProduct);
  *       404:
  *         description: Product not found
  */
-router.post('/:id/images', uploadProductImages, handleMulterError, productController.uploadProductImages);
+router.post(
+  '/:id/images',
+  uploadProductImages,
+  handleMulterError,
+  productController.uploadProductImages
+);
 
 /**
  * @openapi
@@ -887,44 +914,313 @@ module.exports = router;
  * @openapi
  * components:
  *   schemas:
+ *     ProductImage:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: 507f1f77bcf86cd799439011
+ *         url:
+ *           type: string
+ *           example: https://example.com/images/product1.jpg
+ *         publicId:
+ *           type: string
+ *           example: products/product1_main
+ *         alt:
+ *           type: string
+ *           example: Casual T-Shirt front view
+ *         isMain:
+ *           type: boolean
+ *           example: true
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-15T10:30:00Z
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-15T10:30:00Z
+ *
+ *     ProductVariant:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           example: Size
+ *         options:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["Small", "Medium", "Large", "XL"]
+ *
+ *     ProductDimensions:
+ *       type: object
+ *       properties:
+ *         length:
+ *           type: number
+ *           example: 25.5
+ *         width:
+ *           type: number
+ *           example: 20.0
+ *         height:
+ *           type: number
+ *           example: 0.5
+ *         unit:
+ *           type: string
+ *           enum: [cm, in, m, ft]
+ *           example: cm
+ *
+ *     ProductInventory:
+ *       type: object
+ *       properties:
+ *         trackQuantity:
+ *           type: boolean
+ *           example: true
+ *           description: Whether to track inventory quantity (if false, product is always available)
+ *         quantity:
+ *           type: integer
+ *           minimum: 0
+ *           example: 100
+ *           description: Current stock quantity available for sale
+ *         lowStockThreshold:
+ *           type: integer
+ *           minimum: 0
+ *           example: 10
+ *           description: Quantity threshold below which the product is considered low stock
+ *         allowBackorder:
+ *           type: boolean
+ *           example: false
+ *           description: Whether customers can order when out of stock (backorder)
+ *         weight:
+ *           type: number
+ *           minimum: 0
+ *           example: 0.25
+ *         dimensions:
+ *           $ref: '#/components/schemas/ProductDimensions'
+ *
+ *     ProductPricing:
+ *       type: object
+ *       required:
+ *         - price
+ *       properties:
+ *         price:
+ *           type: number
+ *           minimum: 0
+ *           example: 29.99
+ *         comparePrice:
+ *           type: number
+ *           minimum: 0
+ *           example: 39.99
+ *         costPerItem:
+ *           type: number
+ *           minimum: 0
+ *           example: 15.50
+ *         taxable:
+ *           type: boolean
+ *           example: true
+ *         currency:
+ *           type: string
+ *           pattern: '^[A-Z]{3}$'
+ *           example: USD
+ *
+ *     ProductSEO:
+ *       type: object
+ *       properties:
+ *         metaTitle:
+ *           type: string
+ *           maxLength: 60
+ *           example: Comfortable Casual T-Shirt - Premium Quality
+ *         metaDescription:
+ *           type: string
+ *           maxLength: 160
+ *           example: Shop our premium casual t-shirt made from 100% cotton. Perfect for everyday wear with a comfortable fit.
+ *         metaKeywords:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["t-shirt", "casual", "cotton", "comfortable"]
+ *         canonicalUrl:
+ *           type: string
+ *           example: https://example.com/products/casual-t-shirt
+ *
+ *     ProductRating:
+ *       type: object
+ *       properties:
+ *         average:
+ *           type: number
+ *           minimum: 0
+ *           maximum: 5
+ *           example: 4.3
+ *         count:
+ *           type: integer
+ *           minimum: 0
+ *           example: 127
+ *         distribution:
+ *           type: object
+ *           properties:
+ *             '5':
+ *               type: integer
+ *               example: 65
+ *             '4':
+ *               type: integer
+ *               example: 42
+ *             '3':
+ *               type: integer
+ *               example: 15
+ *             '2':
+ *               type: integer
+ *               example: 3
+ *             '1':
+ *               type: integer
+ *               example: 2
+ *
  *     Product:
  *       type: object
+ *       required:
+ *         - name
+ *         - description
+ *         - sku
+ *         - category
+ *         - pricing
  *       properties:
  *         _id:
  *           type: string
  *           example: 6856900de8d08870077cccce
  *         name:
  *           type: string
+ *           maxLength: 200
  *           example: Casual T-Shirt
  *         slug:
  *           type: string
  *           example: casual-t-shirt
  *         description:
  *           type: string
- *           example: A comfortable and stylish t-shirt for everyday wear.
- *         price:
- *           type: number
- *           format: float
- *           example: 29.99
+ *           maxLength: 5000
+ *           example: A comfortable and stylish t-shirt for everyday wear. Made from 100% premium cotton with a perfect fit.
+ *         shortDescription:
+ *           type: string
+ *           maxLength: 500
+ *           example: Comfortable casual t-shirt made from 100% premium cotton.
+ *         sku:
+ *           type: string
+ *           example: TSH-001-BLU-M
+ *         barcode:
+ *           type: string
+ *           example: 1234567890123
  *         category:
  *           type: string
- *           example: Apparel
+ *           example: 507f1f77bcf86cd799439011
+ *         subcategories:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["507f1f77bcf86cd799439012", "507f1f77bcf86cd799439013"]
+ *         brand:
+ *           type: string
+ *           maxLength: 100
+ *           example: FashionBrand
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["casual", "cotton", "comfortable", "summer"]
  *         images:
  *           type: array
  *           items:
- *             type: object
- *             properties:
- *               url:
- *                 type: string
- *               alt:
- *                 type: string
- *         inventory:
+ *             $ref: '#/components/schemas/ProductImage'
+ *         variants:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/ProductVariant'
+ *         specifications:
  *           type: object
- *           properties:
- *             quantity:
- *               type: integer
- *               example: 100
- *             inStock:
- *               type: boolean
- *               example: true
+ *           additionalProperties: true
+ *           example:
+ *             material: "100% Cotton"
+ *             care: "Machine wash cold"
+ *             origin: "Made in USA"
+ *             weight: "180gsm"
+ *         pricing:
+ *           $ref: '#/components/schemas/ProductPricing'
+ *         inventory:
+ *           $ref: '#/components/schemas/ProductInventory'
+ *         seo:
+ *           $ref: '#/components/schemas/ProductSEO'
+ *         rating:
+ *           $ref: '#/components/schemas/ProductRating'
+ *         status:
+ *           type: string
+ *           enum: [active, inactive, draft, archived]
+ *           example: active
+ *           description: Product status - only 'active' products are available for purchase
+ *         visibility:
+ *           type: string
+ *           enum: [public, private, hidden]
+ *           example: public
+ *           description: Product visibility - only 'public' products are shown to customers
+ *         isFeatured:
+ *           type: boolean
+ *           example: false
+ *           description: Whether the product is featured on homepage/promotions
+ *         isDigital:
+ *           type: boolean
+ *           example: false
+ *           description: Whether the product is digital (no shipping required)
+ *         requiresShipping:
+ *           type: boolean
+ *           example: true
+ *           description: Whether the product requires physical shipping
+ *         relatedProducts:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["507f1f77bcf86cd799439014", "507f1f77bcf86cd799439015"]
+ *         viewCount:
+ *           type: integer
+ *           minimum: 0
+ *           example: 1247
+ *         salesCount:
+ *           type: integer
+ *           minimum: 0
+ *           example: 156
+ *         publishedAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-15T10:30:00Z
+ *         lastModifiedBy:
+ *           type: string
+ *           example: 507f1f77bcf86cd799439016
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-15T10:30:00Z
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-16T14:22:00Z
+ *         # Virtual fields (computed) - Availability & Status Indicators
+ *         inStock:
+ *           type: boolean
+ *           readOnly: true
+ *           example: true
+ *           description: Whether the product is currently in stock (considers inventory.quantity and allowBackorder)
+ *         isLowStock:
+ *           type: boolean
+ *           readOnly: true
+ *           example: false
+ *           description: Whether the product stock is below the low stock threshold
+ *         isOnSale:
+ *           type: boolean
+ *           readOnly: true
+ *           example: true
+ *           description: Whether the product has a compare price higher than current price
+ *         discountPercentage:
+ *           type: integer
+ *           readOnly: true
+ *           example: 25
+ *           description: Percentage discount when on sale
+ *         mainImage:
+ *           allOf:
+ *             - $ref: '#/components/schemas/ProductImage'
+ *           readOnly: true
  */
