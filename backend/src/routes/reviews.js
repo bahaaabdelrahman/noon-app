@@ -615,7 +615,6 @@ module.exports = router;
  *           type: string
  *           format: date-time
  *           example: "2024-01-15T10:30:00Z"
- *         # Virtual fields (computed)
  *         age:
  *           type: integer
  *           readOnly: true
@@ -626,7 +625,8 @@ module.exports = router;
  *           readOnly: true
  *           example: 85
  *           description: "Percentage of users who found this review helpful"
- * *     AdminReview:
+ *
+ *     AdminReview:
  *       allOf:
  *         - $ref: '#/components/schemas/Review'
  *         - type: object

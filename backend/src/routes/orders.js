@@ -490,7 +490,6 @@ module.exports = router;
  *           type: string
  *           format: date-time
  *           example: "2024-01-16T14:22:00Z"
- *         # Virtual fields (computed)
  *         itemCount:
  *           type: integer
  *           readOnly: true
