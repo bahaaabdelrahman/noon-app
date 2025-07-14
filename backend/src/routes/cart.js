@@ -385,24 +385,177 @@ module.exports = router;
  * @openapi
  * components:
  *   schemas:
+ *     CartItemVariant:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           example: Size
+ *         value:
+ *           type: string
+ *           example: Large
+ * 
+ *     CartItemSnapshot:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           example: Casual T-Shirt
+ *         slug:
+ *           type: string
+ *           example: casual-t-shirt
+ *         image:
+ *           type: string
+ *           example: https://example.com/images/tshirt.jpg
+ *         sku:
+ *           type: string
+ *           example: TSH-001-BLU-M
+ * 
+ *     CartItem:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: 507f1f77bcf86cd799439011
+ *         product:
+ *           type: string
+ *           example: 6856900de8d08870077cccce
+ *           description: Product ID reference
+ *         quantity:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           example: 2
+ *           description: Quantity of the product
+ *         unitPrice:
+ *           type: number
+ *           minimum: 0
+ *           example: 29.99
+ *           description: Price per unit at time of adding to cart
+ *         totalPrice:
+ *           type: number
+ *           minimum: 0
+ *           example: 59.98
+ *           description: Total price for this line item (unitPrice × quantity)
+ *         selectedVariants:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/CartItemVariant'
+ *           description: Selected product variants (size, color, etc.)
+ *         productSnapshot:
+ *           $ref: '#/components/schemas/CartItemSnapshot'
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-15T10:30:00Z
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-15T10:30:00Z
+ * 
+ *     CartCoupon:
+ *       type: object
+ *       properties:
+ *         code:
+ *           type: string
+ *           example: SAVE20
+ *         discount:
+ *           type: number
+ *           example: 20
+ *         type:
+ *           type: string
+ *           enum: [percentage, fixed]
+ *           example: percentage
+ * 
  *     Cart:
  *       type: object
  *       properties:
  *         _id:
  *           type: string
+ *           example: 507f1f77bcf86cd799439012
+ *         user:
+ *           type: string
+ *           example: 686a689bc8f7365ac4333afe
+ *           description: User ID (null for guest carts)
+ *         sessionId:
+ *           type: string
+ *           example: sess_1234567890abcdef
+ *           description: Session ID for guest carts
  *         items:
  *           type: array
  *           items:
- *             type: object
- *             properties:
- *               product:
- *                 $ref: '#/components/schemas/Product'
- *               quantity:
- *                 type: integer
- *               price:
- *                 type: number
+ *             $ref: '#/components/schemas/CartItem'
+ *           description: Items in the shopping cart
  *         subtotal:
  *           type: number
+ *           minimum: 0
+ *           example: 89.97
+ *           description: Sum of all item prices before tax and shipping
+ *         tax:
+ *           type: number
+ *           minimum: 0
+ *           example: 9.00
+ *           description: Calculated tax amount
+ *         shipping:
+ *           type: number
+ *           minimum: 0
+ *           example: 0
+ *           description: Shipping cost (0 for free shipping)
+ *         discount:
+ *           type: number
+ *           minimum: 0
+ *           example: 17.99
+ *           description: Total discount amount from applied coupons
  *         total:
  *           type: number
+ *           minimum: 0
+ *           example: 80.98
+ *           description: Final total (subtotal + tax + shipping - discount)
+ *         appliedCoupons:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/CartCoupon'
+ *           description: Coupons applied to this cart
+ *         status:
+ *           type: string
+ *           enum: [active, abandoned, converted]
+ *           example: active
+ *           description: Current cart status
+ *         expiresAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-02-15T10:30:00Z
+ *           description: Cart expiration date (7 days for guests, 30 days for users)
+ *         currency:
+ *           type: string
+ *           example: USD
+ *           description: Currency code for prices
+ *         shippingAddress:
+ *           type: string
+ *           example: 507f1f77bcf86cd799439013
+ *           description: Selected shipping address ID
+ *         notes:
+ *           type: string
+ *           maxLength: 500
+ *           example: Please handle with care
+ *           description: Special instructions for the order
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-15T10:30:00Z
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-16T14:22:00Z
+ *         # Virtual fields (computed)
+ *         itemCount:
+ *           type: integer
+ *           readOnly: true
+ *           example: 3
+ *           description: Total number of items in cart (sum of all quantities)
+ *         isEmpty:
+ *           type: boolean
+ *           readOnly: true
+ *           example: false
+ *           description: Whether the cart has no items
  */
