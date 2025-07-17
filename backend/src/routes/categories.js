@@ -424,7 +424,113 @@ module.exports = router;
  * @openapi
  * components:
  *   schemas:
+ *     CategoryImage:
+ *       type: object
+ *       properties:
+ *         url:
+ *           type: string
+ *           example: https://example.com/images/categories/electronics.jpg
+ *         publicId:
+ *           type: string
+ *           example: categories/electronics_main
+ *         alt:
+ *           type: string
+ *           example: Electronics category image
+ * 
+ *     CategoryMetaData:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: Electronics - Best Devices & Accessories
+ *         description:
+ *           type: string
+ *           example: Shop the latest electronics including smartphones, laptops, and accessories
+ *         keywords:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["electronics", "smartphones", "laptops", "gadgets"]
+ * 
  *     Category:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: 60d5ecb54b24c3001f8b4567
+ *         name:
+ *           type: string
+ *           maxLength: 100
+ *           example: Electronics
+ *           description: Category name
+ *         slug:
+ *           type: string
+ *           example: electronics
+ *           description: URL-friendly version of the category name
+ *         description:
+ *           type: string
+ *           maxLength: 500
+ *           example: Electronic devices and accessories including smartphones, laptops, and more
+ *           description: Detailed description of the category
+ *         image:
+ *           $ref: '#/components/schemas/CategoryImage'
+ *         parentCategory:
+ *           type: string
+ *           example: 60d5ecb54b24c3001f8b4566
+ *           description: ID of the parent category (null for root categories)
+ *         level:
+ *           type: integer
+ *           minimum: 0
+ *           maximum: 3
+ *           example: 1
+ *           description: Hierarchy level (0 for root categories, max 3)
+ *         path:
+ *           type: string
+ *           example: root-category/electronics
+ *           description: Full path from root to this category
+ *         isActive:
+ *           type: boolean
+ *           example: true
+ *           description: Whether the category is active and visible
+ *         isFeatured:
+ *           type: boolean
+ *           example: false
+ *           description: Whether the category is featured on homepage
+ *         sortOrder:
+ *           type: integer
+ *           example: 0
+ *           description: Sort order for displaying categories
+ *         metaData:
+ *           $ref: '#/components/schemas/CategoryMetaData'
+ *         productCount:
+ *           type: integer
+ *           minimum: 0
+ *           example: 245
+ *           description: Number of active products in this category
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-15T10:30:00Z
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-16T14:22:00Z
+ *         subcategories:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Category'
+ *           readOnly: true
+ *           description: Child categories (populated when requested)
+ *         products:
+ *           type: array
+ *           items:
+ *             type: string
+ *           readOnly: true
+ *           description: Product IDs in this category (populated when requested)
+ * 
+ *     CategoryHierarchy:
  *       type: object
  *       properties:
  *         _id:
@@ -439,35 +545,29 @@ module.exports = router;
  *         description:
  *           type: string
  *           example: Electronic devices and accessories
- *         parentId:
- *           type: string
- *           example: 60d5ecb54b24c3001f8b4566
  *         image:
- *           type: string
- *           example: /uploads/categories/electronics.jpg
- *         isActive:
- *           type: boolean
- *           example: true
+ *           $ref: '#/components/schemas/CategoryImage'
  *         level:
  *           type: integer
  *           example: 1
- *         createdAt:
+ *         path:
  *           type: string
- *           format: date-time
- *         updatedAt:
- *           type: string
- *           format: date-time
- *     CategoryHierarchy:
- *       type: object
- *       properties:
- *         _id:
- *           type: string
- *         name:
- *           type: string
- *         slug:
- *           type: string
+ *           example: root-category/electronics
+ *         isActive:
+ *           type: boolean
+ *           example: true
+ *         isFeatured:
+ *           type: boolean
+ *           example: false
+ *         sortOrder:
+ *           type: integer
+ *           example: 0
+ *         productCount:
+ *           type: integer
+ *           example: 245
  *         children:
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/CategoryHierarchy'
+ *           description: Child categories in the hierarchy
  */

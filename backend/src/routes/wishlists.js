@@ -153,25 +153,7 @@ router.get(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - name
- *             properties:
- *               name:
- *                 type: string
- *                 example: "My Favorites"
- *               description:
- *                 type: string
- *                 example: "Products I want to buy later"
- *               isPublic:
- *                 type: boolean
- *                 default: false
- *                 example: false
- *               tags:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["electronics", "gadgets"]
+ *             $ref: '#/components/schemas/CreateWishlistRequest'
  *     responses:
  *       201:
  *         description: Wishlist created successfully
@@ -255,22 +237,7 @@ router.get(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: "Updated Wishlist Name"
- *               description:
- *                 type: string
- *                 example: "Updated description"
- *               isPublic:
- *                 type: boolean
- *                 example: true
- *               tags:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["electronics", "gadgets", "tech"]
+ *             $ref: '#/components/schemas/UpdateWishlistRequest'
  *     responses:
  *       200:
  *         description: Wishlist updated successfully
@@ -365,16 +332,7 @@ router.delete(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               note:
- *                 type: string
- *                 example: "Want to buy this for my birthday"
- *               priority:
- *                 type: string
- *                 enum: [low, medium, high]
- *                 default: medium
- *                 example: "high"
+ *             $ref: '#/components/schemas/AddToWishlistRequest'
  *     responses:
  *       200:
  *         description: Product added to wishlist
@@ -509,22 +467,7 @@ router.delete(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               productIds:
- *                 type: array
- *                 items:
- *                   type: string
- *                 description: Specific product IDs to move (if not provided, moves all)
- *                 example: ["60d5ecb54b24c3001f8b4567", "60d5ecb54b24c3001f8b4568"]
- *               quantities:
- *                 type: object
- *                 description: Custom quantities for products (productId as key)
- *                 example: {"60d5ecb54b24c3001f8b4567": 2, "60d5ecb54b24c3001f8b4568": 1}
- *               removeFromWishlist:
- *                 type: boolean
- *                 default: false
- *                 description: Whether to remove items from wishlist after moving
+ *             $ref: '#/components/schemas/MoveToCartRequest'
  *     responses:
  *       200:
  *         description: Items moved to cart successfully
@@ -587,17 +530,7 @@ router.post(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               expiresIn:
- *                 type: string
- *                 enum: [1d, 7d, 30d, never]
- *                 default: 30d
- *                 description: Share link expiration
- *               allowPurchase:
- *                 type: boolean
- *                 default: false
- *                 description: Allow others to purchase items from this wishlist
+ *             $ref: '#/components/schemas/ShareWishlistRequest'
  *     responses:
  *       200:
  *         description: Wishlist shared successfully
@@ -641,22 +574,79 @@ module.exports = router;
  * @openapi
  * components:
  *   schemas:
+ *     WishlistItem:
+ *       type: object
+ *       required:
+ *         - product
+ *       properties:
+ *         product:
+ *           type: string
+ *           example: "507f1f77bcf86cd799439011"
+ *         addedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2024-01-15T10:30:00Z"
+ *         notes:
+ *           type: string
+ *           maxLength: 200
+ *           example: "Want to buy this for my birthday"
+ *         priority:
+ *           type: string
+ *           enum: [low, medium, high]
+ *           example: "high"
+ *
+ *     WishlistSharedWith:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "friend@example.com"
+ *         sharedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2024-01-15T10:30:00Z"
+ *         permissions:
+ *           type: string
+ *           enum: [view, edit]
+ *           example: "view"
+ *
  *     Wishlist:
  *       type: object
+ *       required:
+ *         - user
+ *         - name
  *       properties:
  *         _id:
  *           type: string
- *           example: 60d5ecb54b24c3001f8b4567
+ *           example: "60d5ecb54b24c3001f8b4567"
+ *         user:
+ *           type: string
+ *           example: "60d5ecb54b24c3001f8b4566"
  *         name:
  *           type: string
+ *           maxLength: 100
  *           example: "My Favorites"
  *         description:
  *           type: string
+ *           maxLength: 500
  *           example: "Products I want to buy later"
- *         user:
+ *         items:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WishlistItem'
+ *         privacy:
  *           type: string
- *           example: 60d5ecb54b24c3001f8b4566
- *         isPublic:
+ *           enum: [private, public, shared]
+ *           example: "private"
+ *         sharedWith:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WishlistSharedWith'
+ *         shareToken:
+ *           type: string
+ *           example: "abc123def456789"
+ *         isDefault:
  *           type: boolean
  *           example: false
  *         tags:
@@ -664,90 +654,207 @@ module.exports = router;
  *           items:
  *             type: string
  *           example: ["electronics", "gadgets"]
- *         itemCount:
+ *         totalItems:
  *           type: integer
+ *           minimum: 0
  *           example: 5
  *         totalValue:
  *           type: number
+ *           minimum: 0
  *           example: 299.99
- *         shareToken:
- *           type: string
- *           example: "abc123def456"
- *         shareExpiresAt:
+ *         lastModified:
  *           type: string
  *           format: date-time
- *           nullable: true
+ *           example: "2024-01-16T14:22:00Z"
  *         createdAt:
  *           type: string
  *           format: date-time
+ *           example: "2024-01-15T10:30:00Z"
  *         updatedAt:
  *           type: string
  *           format: date-time
+ *           example: "2024-01-16T14:22:00Z"
+ *         itemCount:
+ *           type: integer
+ *           readOnly: true
+ *           example: 5
+ *           description: "Total number of items in the wishlist"
+ *         shareUrl:
+ *           type: string
+ *           readOnly: true
+ *           example: "https://example.com/wishlists/shared/abc123def456789"
+ *           description: "Public URL for sharing the wishlist (only if shareToken exists)"
+ *
+ *     WishlistItemWithProduct:
+ *       type: object
+ *       properties:
+ *         product:
+ *           $ref: '#/components/schemas/Product'
+ *         addedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2024-01-15T10:30:00Z"
+ *         notes:
+ *           type: string
+ *           maxLength: 200
+ *           example: "Want to buy this for my birthday"
+ *         priority:
+ *           type: string
+ *           enum: [low, medium, high]
+ *           example: "high"
+ *
  *     WishlistWithProducts:
  *       allOf:
  *         - $ref: '#/components/schemas/Wishlist'
  *         - type: object
  *           properties:
- *             products:
+ *             items:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   product:
- *                     $ref: '#/components/schemas/Product'
- *                   addedAt:
- *                     type: string
- *                     format: date-time
- *                   note:
- *                     type: string
- *                     example: "Want to buy this for my birthday"
- *                   priority:
- *                     type: string
- *                     enum: [low, medium, high]
- *                     example: "high"
+ *                 $ref: '#/components/schemas/WishlistItemWithProduct'
+ *
+ *     SharedWishlistOwner:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "507f1f77bcf86cd799439011"
+ *         firstName:
+ *           type: string
+ *           example: "John"
+ *         lastName:
+ *           type: string
+ *           example: "Doe"
+ *         avatar:
+ *           type: string
+ *           example: "https://example.com/avatars/user1.jpg"
+ *
  *     SharedWishlist:
  *       type: object
  *       properties:
  *         _id:
  *           type: string
+ *           example: "60d5ecb54b24c3001f8b4567"
  *         name:
  *           type: string
+ *           example: "My Favorites"
  *         description:
  *           type: string
- *         owner:
- *           type: object
- *           properties:
- *             firstName:
- *               type: string
- *             lastName:
- *               type: string
- *             avatar:
- *               type: string
- *         isPublic:
- *           type: boolean
+ *           example: "Products I want to buy later"
+ *         user:
+ *           $ref: '#/components/schemas/SharedWishlistOwner'
+ *         privacy:
+ *           type: string
+ *           enum: [public, shared]
+ *           example: "public"
  *         tags:
  *           type: array
  *           items:
  *             type: string
- *         products:
+ *           example: ["electronics", "gadgets"]
+ *         items:
  *           type: array
  *           items:
- *             type: object
- *             properties:
- *               product:
- *                 $ref: '#/components/schemas/Product'
- *               addedAt:
- *                 type: string
- *                 format: date-time
- *               note:
- *                 type: string
- *               priority:
- *                 type: string
- *                 enum: [low, medium, high]
+ *             $ref: '#/components/schemas/WishlistItemWithProduct'
+ *         totalItems:
+ *           type: integer
+ *           example: 5
+ *         totalValue:
+ *           type: number
+ *           example: 299.99
  *         createdAt:
  *           type: string
  *           format: date-time
+ *           example: "2024-01-15T10:30:00Z"
  *         updatedAt:
  *           type: string
  *           format: date-time
+ *           example: "2024-01-16T14:22:00Z"
+ *
+ *     CreateWishlistRequest:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         name:
+ *           type: string
+ *           maxLength: 100
+ *           example: "My Favorites"
+ *         description:
+ *           type: string
+ *           maxLength: 500
+ *           example: "Products I want to buy later"
+ *         privacy:
+ *           type: string
+ *           enum: [private, public, shared]
+ *           example: "private"
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["electronics", "gadgets"]
+ *
+ *     UpdateWishlistRequest:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           maxLength: 100
+ *           example: "Updated Wishlist Name"
+ *         description:
+ *           type: string
+ *           maxLength: 500
+ *           example: "Updated description"
+ *         privacy:
+ *           type: string
+ *           enum: [private, public, shared]
+ *           example: "public"
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["electronics", "gadgets", "tech"]
+ *
+ *     AddToWishlistRequest:
+ *       type: object
+ *       properties:
+ *         notes:
+ *           type: string
+ *           maxLength: 200
+ *           example: "Want to buy this for my birthday"
+ *         priority:
+ *           type: string
+ *           enum: [low, medium, high]
+ *           example: "high"
+ *
+ *     MoveToCartRequest:
+ *       type: object
+ *       properties:
+ *         productIds:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: "Specific product IDs to move (if not provided, moves all)"
+ *           example: ["60d5ecb54b24c3001f8b4567", "60d5ecb54b24c3001f8b4568"]
+ *         quantities:
+ *           type: object
+ *           description: "Custom quantities for products (productId as key)"
+ *           example: {"60d5ecb54b24c3001f8b4567": 2, "60d5ecb54b24c3001f8b4568": 1}
+ *         removeFromWishlist:
+ *           type: boolean
+ *           example: false
+ *           description: "Whether to remove items from wishlist after moving"
+ *
+ *     ShareWishlistRequest:
+ *       type: object
+ *       properties:
+ *         expiresIn:
+ *           type: string
+ *           enum: [1d, 7d, 30d, never]
+ *           example: "30d"
+ *           description: "Share link expiration"
+ *         allowPurchase:
+ *           type: boolean
+ *           example: false
+ *           description: "Allow others to purchase items from this wishlist"
  */
