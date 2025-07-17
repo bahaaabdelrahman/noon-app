@@ -1,0 +1,96 @@
+<!-- (1) الغلاف العام لمحتوى النافذة -->
+<div class="login-dialog-card">
+
+  <!-- (2) زر الإغلاق -->
+  <button mat-icon-button class="close-button" (click)="dialogRef.close()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <!-- (3) الصورة المتحركة -->
+  <div class="image-container">
+    <img
+      src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmR1eW95ZGEwMGM2bXRxbTNtM3VoNXRvM3Ztd2Q4ZXd2Yml2aHE5NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3o7abB06u9bNzA8lu8/giphy.gif"
+      alt="login gif">
+  </div>
+
+  <!-- (4) العنوان الرئيسي -->
+  <h2 class="main-heading">هيا لنبدأ</h2>
+
+  <!-- (5) النموذج الذي يحتوي على الحقول والأزرار -->
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
+    <!-- أزرار التبديل -->
+    <div class="dialog-tabs">
+      <button type="button" mat-button class="tab-button" [class.active]="activeTab === 'login'"
+        (click)="switchTab('login')">
+        {{ 'LOGIN' | translate }}
+      </button>
+      <button type="button" mat-button class="tab-button" [class.active]="activeTab === 'register'"
+        (click)="switchTab('register')">
+        {{ 'اشترك الان' | translate }}
+      </button>
+    </div>
+
+    <!-- حقل الاسم (يظهر فقط عند التسجيل) -->
+    <div *ngIf="activeTab === 'register'" class="form-row">
+  <!-- حقل الاسم الأول -->
+      <mat-form-field appearance="outline" class="half-width-field">
+        <mat-label>{{ 'FIRST_NAME' | translate }}</mat-label>
+        <input matInput formControlName="firstName">
+      </mat-form-field>
+
+  <!-- حقل الاسم الأخير -->
+      <mat-form-field appearance="outline" class="half-width-field">
+        <mat-label>{{ 'LAST_NAME' | translate }}</mat-label>
+        <input matInput formControlName="lastName">
+      </mat-form-field>
+    </div>
+
+    <!-- حقل البريد الإلكتروني -->
+    <mat-form-field appearance="outline" class="full-width-field">
+      <mat-label>{{ activeTab === 'login' ? ('EMAIL_OR_PHONE' | translate) : ('EMAIL' | translate) }}</mat-label>
+      <input matInput
+        [placeholder]="activeTab === 'login' ? ('LOGIN_PLACEHOLDER' | translate) : ('REGISTER_PLACEHOLDER' | translate)"
+        formControlName="email">
+    </mat-form-field>
+
+    <!-- حقل كلمة المرور -->
+        <mat-form-field appearance="outline" class="full-width-field">
+          <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
+          <input matInput type="password" formControlName="password">
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            كلمة المرور مطلوبة
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+            يجب أن تكون كلمة المرور 8 أحرف على الأقل
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('pattern')">
+            يجب أن تحتوي على حروف كبيرة، صغيرة، أرقام، ورموز
+          </mat-error>
+        </mat-form-field>
+
+        <!-- حقل تأكيد كلمة المرور: يظهر فقط عند التسجيل -->
+        <mat-form-field *ngIf="activeTab === 'register'" appearance="outline" class="full-width-field">
+          <mat-label>{{ 'CONFIRM_PASSWORD' | translate }}</mat-label>
+          <input matInput type="password" formControlName="confirmPassword">
+          <!-- رسالة خطأ عند عدم تطابق كلمتي المرور -->
+          <mat-error *ngIf="loginForm.hasError('passwordMismatch') && loginForm.get('confirmPassword')?.touched">
+            كلمتا المرور غير متطابقتين
+          </mat-error>
+        </mat-form-field>
+
+    <!-- رسالة الخطأ -->
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+    <!-- زر الاستمرار -->
+    <div class="dialog-actions">
+      <button mat-flat-button color="primary" class="continue-button" type="submit"
+        [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="!isLoading">{{ 'CONTINUE' | translate }}</span>
+        <span *ngIf="isLoading">{{ 'LOADING' | translate }}...</span>
+      </button>
+    </div>
+
+  </form>
+
+</div>

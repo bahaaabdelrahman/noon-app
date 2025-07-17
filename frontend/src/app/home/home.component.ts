@@ -9,15 +9,17 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
-
+import { MatDialog } from '@angular/material/dialog';
+import { LoginDialogComponent } from '../auth/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'app-home',
-  standalone: false,
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrls: ['./home.component.css'],
+  standalone: false
 })
-export class HomeComponent {
+export class HomeComponent implements AfterViewInit, OnDestroy {
+
 
   title = 'MyNoonApp';
   currentLang = 'ar';
@@ -66,9 +68,6 @@ export class HomeComponent {
     { name: 'Nokia', logo: 'https://f.nooncdn.com/mpcms/EN0003/assets/89fd76d8-c7f5-4366-b65a-93c488a64595.png', link: '#' },
   ];
 
-
-
-
   showLeftArrow = false;
   showRightArrow = false;
   private scrollAmount = 350;
@@ -76,17 +75,20 @@ export class HomeComponent {
   private isRtl = false;
   private isBrowser: boolean;
 
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public dialog: MatDialog
   ) {
+
+
     this.isBrowser = isPlatformBrowser(this.platformId);
 
     if (this.translate) {
       this.translate.setDefaultLang('ar');
       this.translate.use('ar');
 
-      // ✅ فقط إذا كنا في المتصفح
       if (this.isBrowser) {
         this.setDirection(this.currentLang);
       }
@@ -94,6 +96,7 @@ export class HomeComponent {
       console.warn('TranslateService is undefined!');
     }
   }
+
 
   ngAfterViewInit(): void {
     if (this.isBrowser) {
@@ -103,8 +106,10 @@ export class HomeComponent {
         this.updateArrows();
       });
 
-      this.resizeObserver.observe(this.categoriesWrapper.nativeElement);
-      this.updateArrows();
+      if (this.categoriesWrapper) {
+        this.resizeObserver.observe(this.categoriesWrapper.nativeElement);
+        this.updateArrows();
+      }
     }
   }
 
@@ -115,89 +120,74 @@ export class HomeComponent {
   }
 
   private updateArrows(): void {
-    if (!this.isBrowser) return;
-
-    const wrapper = this.categoriesWrapper?.nativeElement;
-    if (!wrapper) return;
-
-    const scrollLeft = this.isRtl
-      ? Math.abs(wrapper.scrollLeft)
-      : wrapper.scrollLeft;
-
+    if (!this.isBrowser || !this.categoriesWrapper) return;
+    const wrapper = this.categoriesWrapper.nativeElement;
+    const scrollLeft = this.isRtl ? Math.abs(wrapper.scrollLeft) : wrapper.scrollLeft;
     const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
-
     this.showLeftArrow = scrollLeft > 5;
     this.showRightArrow = scrollLeft < maxScroll - 5;
   }
 
   scrollRight(): void {
-    if (!this.isBrowser) return;
-
+    if (!this.isBrowser || !this.categoriesWrapper) return;
     const wrapper = this.categoriesWrapper.nativeElement;
     const direction = this.isRtl ? -1 : 1;
     wrapper.scrollBy({ left: direction * this.scrollAmount, behavior: 'smooth' });
-
     setTimeout(() => this.updateArrows(), 400);
   }
 
   scrollLeft(): void {
-    if (!this.isBrowser) return;
-
+    if (!this.isBrowser || !this.categoriesWrapper) return;
     const wrapper = this.categoriesWrapper.nativeElement;
     const direction = this.isRtl ? -1 : 1;
     wrapper.scrollBy({ left: -direction * this.scrollAmount, behavior: 'smooth' });
-
     setTimeout(() => this.updateArrows(), 400);
   }
 
   switchLanguage(): void {
     this.currentLang = this.currentLang === 'en' ? 'ar' : 'en';
     this.translate.use(this.currentLang);
-
     if (this.isBrowser) {
-      const dir = this.currentLang === 'ar' ? 'rtl' : 'ltr';
-      document.documentElement.dir = dir;
-      document.body.dir = dir;
-
-      this.isRtl = dir === 'rtl';
+      this.setDirection(this.currentLang);
       setTimeout(() => this.updateArrows(), 300);
     }
   }
 
   private setDirection(lang: string): void {
-    if (!this.isBrowser) return;
-
-    const dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.dir = dir;
-    document.body.dir = dir;
-    this.isRtl = dir === 'rtl';
+    if (this.isBrowser) {
+      const dir = lang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.dir = dir;
+      document.body.dir = dir;
+      this.isRtl = dir === 'rtl';
+    }
   }
-
 
   scrollCarousel(amount: number): void {
-    const carouselElement = this.productCarousel.nativeElement as HTMLElement;
-    carouselElement.scrollBy({
-      left: amount,
-      behavior: 'smooth' // لجعل التمرير سلسًا
-    });
+    if (this.productCarousel) {
+      this.productCarousel.nativeElement.scrollBy({ left: amount, behavior: 'smooth' });
+    }
   }
-
 
   scrollBrands(direction: number): void {
-    const carouselElement = this.brandCarousel.nativeElement as HTMLElement;
-    const scrollAmount = carouselElement.clientWidth;
+    if (this.brandCarousel) {
+      const scrollAmount = this.brandCarousel.nativeElement.clientWidth;
+      this.brandCarousel.nativeElement.scrollBy({ left: scrollAmount * direction, behavior: 'smooth' });
+    }
+  }
 
-    carouselElement.scrollBy({
-      left: scrollAmount * direction,
-      behavior: 'smooth'
+  addToCart(): void {
+    console.log('تمت إضافة المنتج إلى السلة');
+  }
+
+  // دالة فتح نافذة تسجيل الدخول
+  openLoginDialog(): void {
+    const dialogRef = this.dialog.open(LoginDialogComponent, {
+      width: '450px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // يمكنك التعامل مع النتيجة هنا
     });
   }
-
-
-  addToCart() {
-    console.log('تمت إضافة المنتج إلى السلة');
-    // يمكنك استدعاء خدمة لإضافة المنتج فعليًا
-  }
-
-
 }
