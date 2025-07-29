@@ -3,16 +3,10 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn,
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '../auth.service';
 
-// دالة مخصصة للتحقق من تطابق كلمتي المرور
 export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const password = control.get('password');
   const confirmPassword = control.get('confirmPassword');
-
-  // إذا لم يتم إدخال أي منهما، لا تقم بالتحقق
-  if (!password || !confirmPassword) {
-    return null;
-  }
-
+  if (!password || !confirmPassword) return null;
   return password.value === confirmPassword.value ? null : { passwordMismatch: true };
 };
 
@@ -33,93 +27,69 @@ export class LoginDialogComponent {
     private fb: FormBuilder,
     private authService: AuthService
   ) {
-    // بناء النموذج مع جميع الحقول المحتملة
     this.loginForm = this.fb.group({
       firstName: [''],
       lastName: [''],
       email: ['', [Validators.required, Validators.email]],
-
-      // هذا النمط يتأكد من وجود حرف صغير، كبير، رقم، ورمز خاص واحد على الأقل
       password: ['', [
         Validators.required,
         Validators.minLength(8),
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+)/)
       ]],
-      confirmPassword: [''] // سنضيف validator هنا ديناميكيًا
-    }, {
-      // validators: passwordMatchValidator
+      confirmPassword: ['']
     });
-
-    // استدعاء switchTab لضبط الحالة الأولية (login) بشكل صحيح
     this.switchTab('login');
   }
 
-   switchTab(tab: 'login' | 'register'): void {
-  this.activeTab = tab;
-  this.errorMessage = null;
-  this.loginForm.reset(); // نبدأ من حالة نظيفة
+  switchTab(tab: 'login' | 'register'): void {
+    this.activeTab = tab;
+    this.errorMessage = null;
+    this.loginForm.reset();
 
-  // الحصول على الحقول
-  const firstName = this.loginForm.get('firstName');
-  const lastName = this.loginForm.get('lastName');
-  const password = this.loginForm.get('password');
-  const confirmPassword = this.loginForm.get('confirmPassword');
+    const firstName = this.loginForm.get('firstName');
+    const lastName = this.loginForm.get('lastName');
+    const password = this.loginForm.get('password');
+    const confirmPassword = this.loginForm.get('confirmPassword');
 
-  // التأكد من وجود الحقول
-  if (!firstName || !lastName || !password || !confirmPassword) {
-    return;
+    if (!firstName || !lastName || !password || !confirmPassword) return;
+
+    this.loginForm.clearValidators();
+    firstName.clearValidators();
+    lastName.clearValidators();
+    password.clearValidators();
+    confirmPassword.clearValidators();
+
+    firstName.disable();
+    lastName.disable();
+    confirmPassword.disable();
+
+    if (tab === 'register') {
+      firstName.enable();
+      lastName.enable();
+      confirmPassword.enable();
+
+      firstName.setValidators([Validators.required]);
+      lastName.setValidators([Validators.required]);
+      password.setValidators([
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/)
+      ]);
+      confirmPassword.setValidators([Validators.required]);
+      this.loginForm.setValidators(passwordMatchValidator);
+    } else {
+      password.setValidators([Validators.required]);
+    }
+
+    this.loginForm.get('email')?.enable();
+    this.loginForm.get('email')?.setValidators([Validators.required, Validators.email]);
+    this.loginForm.updateValueAndValidity();
   }
-
-  // أولاً، قم بمسح جميع الـ validators من النموذج ككل ومن الحقول
-  this.loginForm.clearValidators();
-  firstName.clearValidators();
-  lastName.clearValidators();
-  password.clearValidators();
-  confirmPassword.clearValidators();
-
-  // قم بتعطيل الحقول التي قد لا نحتاجها
-  firstName.disable();
-  lastName.disable();
-  confirmPassword.disable();
-
-
-  if (tab === 'register') {
-    // --- حالة التسجيل ---
-    // 1. تفعيل الحقول المطلوبة
-    firstName.enable();
-    lastName.enable();
-    confirmPassword.enable();
-
-    // 2. إضافة قواعد التحقق للحقول
-    firstName.setValidators([Validators.required]);
-    lastName.setValidators([Validators.required]);
-    password.setValidators([
-      Validators.required,
-      Validators.minLength(8),
-      Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/)
-    ]);
-    confirmPassword.setValidators([Validators.required]);
-
-    // 3. إضافة قاعدة التحقق من تطابق كلمة المرور على مستوى النموذج
-    this.loginForm.setValidators(passwordMatchValidator);
-
-  } else {
-    password.setValidators([Validators.required]);
-  }
-
-  // أعد تفعيل حقل البريد الإلكتروني لأنه مطلوب في كلتا الحالتين
-  this.loginForm.get('email')?.enable();
-  this.loginForm.get('email')?.setValidators([Validators.required, Validators.email]);
-
-  // تحديث صلاحية النموذج بالكامل في النهاية
-  this.loginForm.updateValueAndValidity();
-}
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      // التحقق من خطأ عدم تطابق كلمة المرور يدويًا لعرض رسالة واضحة
       if (this.loginForm.hasError('passwordMismatch')) {
-        this.errorMessage = 'كلمتا المرور غير متطابقتين.';
+        this.errorMessage = 'Passwords do not match.';
       }
       return;
     }
@@ -128,50 +98,37 @@ export class LoginDialogComponent {
     this.errorMessage = null;
 
     if (this.activeTab === 'login') {
-          const { email, password } = this.loginForm.value;
+      const { email, password } = this.loginForm.value;
+      const credentials = { email, password };
 
-    // (1) إنشاء كائن البيانات بالاسم الصحيح الذي يتوقعه الخادم
-    const credentials = { email, password };
-
-    // (2) استدعاء خدمة تسجيل الدخول بالبيانات الصحيحة
-    this.authService.login(credentials).subscribe({
-      next: (response) => {
-        console.log('Login successful', response);
-        this.dialogRef.close(true);
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'فشل تسجيل الدخول. البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-        this.isLoading = false;
-      }
-    });
-    } else {
-
-    const { firstName, lastName, email, password, confirmPassword } = this.loginForm.value;
-
-    const registrationData = {
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword
-    };
-
-
-    this.authService.register(registrationData).subscribe({
-      next: (response) => {
-        console.log('Registration successful', response);
-        this.dialogRef.close(true);
-      },
-      error: (err) => {
-        if (err.error?.details && Array.isArray(err.error.details)) {
-          this.errorMessage = err.error.details.map((e: any) => e.message).join('. ');
-        } else {
-          this.errorMessage = err.error?.message || 'فشل التسجيل. يرجى المحاولة مرة أخرى.';
+      this.authService.login(credentials).subscribe({
+        next: (response) => {
+          console.log('Login successful', response);
+          this.dialogRef.close(true);
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Login failed. Incorrect email or password.';
+          this.isLoading = false;
         }
-        this.isLoading = false;
-      }
-    });
+      });
+    } else {
+      const { firstName, lastName, email, password, confirmPassword } = this.loginForm.value;
+      const registrationData = { firstName, lastName, email, password, confirmPassword };
 
+      this.authService.register(registrationData).subscribe({
+        next: (response) => {
+          console.log('Registration successful', response);
+          this.dialogRef.close(true);
+        },
+        error: (err) => {
+          if (err.error?.details && Array.isArray(err.error.details)) {
+            this.errorMessage = err.error.details.map((e: any) => e.message).join('. ');
+          } else {
+            this.errorMessage = err.error?.message || 'Registration failed. Please try again.';
+          }
+          this.isLoading = false;
+        }
+      });
     }
   }
 }

@@ -5,18 +5,21 @@
 This document provides comprehensive specifications for the e-commerce REST API built with Node.js, Express.js, and MongoDB.
 
 ### Base URL
+
 ```
 Development: http://localhost:3000/api/v1
 Production: https://api.yourdomain.com/v1
 ```
 
 ### Authentication
+
 - **Type:** Bearer Token (JWT)
 - **Header:** `Authorization: Bearer <token>`
 - **Token Expiry:** 24 hours (configurable)
 - **Refresh Token:** 7 days (configurable)
 
 ### Response Format
+
 ```json
 {
   "success": true,
@@ -32,6 +35,7 @@ Production: https://api.yourdomain.com/v1
 ```
 
 ### Error Response Format
+
 ```json
 {
   "success": false,
@@ -51,6 +55,7 @@ Production: https://api.yourdomain.com/v1
 ## 1. Authentication & Authorization
 
 ### 1.1 User Registration
+
 ```http
 POST /api/v1/auth/register
 Content-Type: application/json
@@ -65,6 +70,7 @@ Content-Type: application/json
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -88,6 +94,7 @@ Content-Type: application/json
 ```
 
 ### 1.2 User Login
+
 ```http
 POST /api/v1/auth/login
 Content-Type: application/json
@@ -99,6 +106,7 @@ Content-Type: application/json
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -120,6 +128,7 @@ Content-Type: application/json
 ```
 
 ### 1.3 Refresh Token
+
 ```http
 POST /api/v1/auth/refresh
 Content-Type: application/json
@@ -130,12 +139,14 @@ Content-Type: application/json
 ```
 
 ### 1.4 Logout
+
 ```http
 POST /api/v1/auth/logout
 Authorization: Bearer <token>
 ```
 
 ### 1.5 Forgot Password
+
 ```http
 POST /api/v1/auth/forgot-password
 Content-Type: application/json
@@ -146,6 +157,7 @@ Content-Type: application/json
 ```
 
 ### 1.6 Reset Password
+
 ```http
 POST /api/v1/auth/reset-password
 Content-Type: application/json
@@ -159,12 +171,14 @@ Content-Type: application/json
 ## 2. User Management
 
 ### 2.1 Get User Profile
+
 ```http
 GET /api/v1/users/profile
 Authorization: Bearer <token>
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -195,6 +209,7 @@ Authorization: Bearer <token>
 ```
 
 ### 2.2 Update User Profile
+
 ```http
 PUT /api/v1/users/profile
 Authorization: Bearer <token>
@@ -208,6 +223,7 @@ Content-Type: application/json
 ```
 
 ### 2.3 Add Address
+
 ```http
 POST /api/v1/users/addresses
 Authorization: Bearer <token>
@@ -225,6 +241,7 @@ Content-Type: application/json
 ```
 
 ### 2.4 Update Address
+
 ```http
 PUT /api/v1/users/addresses/64f7b1c2d4a5e6f7g8h9i0j2
 Authorization: Bearer <token>
@@ -237,6 +254,7 @@ Content-Type: application/json
 ```
 
 ### 2.5 Delete Address
+
 ```http
 DELETE /api/v1/users/addresses/64f7b1c2d4a5e6f7g8h9i0j2
 Authorization: Bearer <token>
@@ -245,11 +263,13 @@ Authorization: Bearer <token>
 ## 3. Products
 
 ### 3.1 Get All Products
+
 ```http
 GET /api/v1/products?page=1&limit=10&category=electronics&minPrice=100&maxPrice=1000&sort=price&search=laptop
 ```
 
 **Query Parameters:**
+
 - `page` (number): Page number (default: 1)
 - `limit` (number): Items per page (default: 10, max: 50)
 - `category` (string): Filter by category slug
@@ -260,6 +280,7 @@ GET /api/v1/products?page=1&limit=10&category=electronics&minPrice=100&maxPrice=
 - `featured` (boolean): Filter featured products
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -307,11 +328,13 @@ GET /api/v1/products?page=1&limit=10&category=electronics&minPrice=100&maxPrice=
 ```
 
 ### 3.2 Get Single Product
+
 ```http
 GET /api/v1/products/gaming-laptop
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -396,6 +419,7 @@ GET /api/v1/products/gaming-laptop
 ```
 
 ### 3.3 Create Product (Admin)
+
 ```http
 POST /api/v1/products
 Authorization: Bearer <admin-token>
@@ -426,6 +450,7 @@ Content-Type: application/json
 ```
 
 ### 3.4 Update Product (Admin)
+
 ```http
 PUT /api/v1/products/64f7b1c2d4a5e6f7g8h9i0j3
 Authorization: Bearer <admin-token>
@@ -438,12 +463,14 @@ Content-Type: application/json
 ```
 
 ### 3.5 Delete Product (Admin)
+
 ```http
 DELETE /api/v1/products/64f7b1c2d4a5e6f7g8h9i0j3
 Authorization: Bearer <admin-token>
 ```
 
 ### 3.6 Upload Product Images (Admin)
+
 ```http
 POST /api/v1/products/64f7b1c2d4a5e6f7g8h9i0j3/images
 Authorization: Bearer <admin-token>
@@ -457,11 +484,13 @@ FormData:
 ## 4. Categories
 
 ### 4.1 Get All Categories
+
 ```http
 GET /api/v1/categories
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -491,11 +520,13 @@ GET /api/v1/categories
 ```
 
 ### 4.2 Get Single Category
+
 ```http
 GET /api/v1/categories/electronics
 ```
 
 ### 4.3 Create Category (Admin)
+
 ```http
 POST /api/v1/categories
 Authorization: Bearer <admin-token>
@@ -511,12 +542,14 @@ Content-Type: application/json
 ## 5. Shopping Cart
 
 ### 5.1 Get Cart
+
 ```http
 GET /api/v1/cart
 Authorization: Bearer <token>
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -541,7 +574,7 @@ Authorization: Bearer <token>
       ],
       "subtotal": 2599.98,
       "tax": 207.99,
-      "shipping": 0.00,
+      "shipping": 0.0,
       "totalItems": 2,
       "totalAmount": 2807.97,
       "updatedAt": "2024-01-01T00:00:00.000Z"
@@ -551,6 +584,7 @@ Authorization: Bearer <token>
 ```
 
 ### 5.2 Add Item to Cart
+
 ```http
 POST /api/v1/cart/items
 Authorization: Bearer <token>
@@ -563,6 +597,7 @@ Content-Type: application/json
 ```
 
 ### 5.3 Update Cart Item
+
 ```http
 PUT /api/v1/cart/items/64f7b1c2d4a5e6f7g8h9i0j3
 Authorization: Bearer <token>
@@ -574,12 +609,14 @@ Content-Type: application/json
 ```
 
 ### 5.4 Remove Item from Cart
+
 ```http
 DELETE /api/v1/cart/items/64f7b1c2d4a5e6f7g8h9i0j3
 Authorization: Bearer <token>
 ```
 
 ### 5.5 Clear Cart
+
 ```http
 DELETE /api/v1/cart
 Authorization: Bearer <token>
@@ -588,12 +625,14 @@ Authorization: Bearer <token>
 ## 6. Orders
 
 ### 6.1 Get User Orders
+
 ```http
 GET /api/v1/orders?page=1&limit=10&status=delivered
 Authorization: Bearer <token>
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -618,7 +657,7 @@ Authorization: Bearer <token>
         "paymentStatus": "paid",
         "subtotal": 1299.99,
         "tax": 103.99,
-        "shipping": 0.00,
+        "shipping": 0.0,
         "totalAmount": 1403.98,
         "shippingAddress": {
           "firstName": "John",
@@ -645,12 +684,14 @@ Authorization: Bearer <token>
 ```
 
 ### 6.2 Get Single Order
+
 ```http
 GET /api/v1/orders/64f7b1c2d4a5e6f7g8h9i0j10
 Authorization: Bearer <token>
 ```
 
 ### 6.3 Create Order
+
 ```http
 POST /api/v1/orders
 Authorization: Bearer <token>
@@ -688,6 +729,7 @@ Content-Type: application/json
 ```
 
 ### 6.4 Cancel Order
+
 ```http
 PUT /api/v1/orders/64f7b1c2d4a5e6f7g8h9i0j10/cancel
 Authorization: Bearer <token>
@@ -696,11 +738,13 @@ Authorization: Bearer <token>
 ## 7. Reviews
 
 ### 7.1 Get Product Reviews
+
 ```http
 GET /api/v1/products/64f7b1c2d4a5e6f7g8h9i0j3/reviews?page=1&limit=10&rating=5
 ```
 
 ### 7.2 Create Review
+
 ```http
 POST /api/v1/products/64f7b1c2d4a5e6f7g8h9i0j3/reviews
 Authorization: Bearer <token>
@@ -715,6 +759,7 @@ Content-Type: application/json
 ```
 
 ### 7.3 Update Review
+
 ```http
 PUT /api/v1/reviews/64f7b1c2d4a5e6f7g8h9i0j11
 Authorization: Bearer <token>
@@ -728,6 +773,7 @@ Content-Type: application/json
 ```
 
 ### 7.4 Delete Review
+
 ```http
 DELETE /api/v1/reviews/64f7b1c2d4a5e6f7g8h9i0j11
 Authorization: Bearer <token>
@@ -736,6 +782,7 @@ Authorization: Bearer <token>
 ## 8. Payments
 
 ### 8.1 Create Payment Intent
+
 ```http
 POST /api/v1/payments/create-intent
 Authorization: Bearer <token>
@@ -750,6 +797,7 @@ Content-Type: application/json
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -761,6 +809,7 @@ Content-Type: application/json
 ```
 
 ### 8.2 Confirm Payment
+
 ```http
 POST /api/v1/payments/confirm
 Authorization: Bearer <token>
@@ -773,6 +822,7 @@ Content-Type: application/json
 ```
 
 ### 8.3 Payment Webhook
+
 ```http
 POST /api/v1/payments/webhook
 Content-Type: application/json
@@ -796,12 +846,14 @@ Stripe-Signature: signature
 ## 9. Admin Routes
 
 ### 9.1 Get All Orders (Admin)
+
 ```http
 GET /api/v1/admin/orders?page=1&limit=10&status=pending
 Authorization: Bearer <admin-token>
 ```
 
 ### 9.2 Update Order Status (Admin)
+
 ```http
 PUT /api/v1/admin/orders/64f7b1c2d4a5e6f7g8h9i0j10/status
 Authorization: Bearer <admin-token>
@@ -815,19 +867,21 @@ Content-Type: application/json
 ```
 
 ### 9.3 Get Analytics (Admin)
+
 ```http
 GET /api/v1/admin/analytics?period=30days
 Authorization: Bearer <admin-token>
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
   "data": {
     "analytics": {
       "sales": {
-        "total": 125000.00,
+        "total": 125000.0,
         "orders": 450,
         "averageOrderValue": 277.78
       },
@@ -846,7 +900,7 @@ Authorization: Bearer <admin-token>
           "id": "64f7b1c2d4a5e6f7g8h9i0j3",
           "name": "Gaming Laptop",
           "sales": 50,
-          "revenue": 64999.50
+          "revenue": 64999.5
         }
       ]
     }
@@ -857,11 +911,13 @@ Authorization: Bearer <admin-token>
 ## HTTP Status Codes
 
 ### Success Codes
+
 - `200 OK` - Request successful
 - `201 Created` - Resource created successfully
 - `204 No Content` - Request successful, no content returned
 
 ### Client Error Codes
+
 - `400 Bad Request` - Invalid request data
 - `401 Unauthorized` - Authentication required
 - `403 Forbidden` - Access denied
@@ -871,17 +927,20 @@ Authorization: Bearer <admin-token>
 - `429 Too Many Requests` - Rate limit exceeded
 
 ### Server Error Codes
+
 - `500 Internal Server Error` - Server error
 - `503 Service Unavailable` - Service temporarily unavailable
 
 ## Rate Limiting
 
 ### Default Limits
+
 - **General API:** 100 requests per 15 minutes per IP
 - **Authentication:** 5 requests per 15 minutes per IP
 - **Admin API:** 200 requests per 15 minutes per authenticated user
 
 ### Headers
+
 - `X-RateLimit-Limit` - Request limit
 - `X-RateLimit-Remaining` - Remaining requests
 - `X-RateLimit-Reset` - Reset time (Unix timestamp)

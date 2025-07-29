@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 export interface AuthResponse {
   token: string;
   user: any;
-  data: any; // أضفنا data لاحتمالية وجودها
+  data: any;
 }
 
 @Injectable({
@@ -25,39 +25,43 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  // 1. دالة تسجيل الدخول (لا تغيير هنا)
   login(credentials: { email: string; password: string }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
-        // نمرر الرد الكامل إلى setSession
         this.setSession(response);
       })
     );
   }
 
-  // 2. دالة التسجيل (لا تغيير هنا)
+
   register(userData: any): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData).pipe(
       tap(response => {
-        // نمرر الرد الكامل إلى setSession
         this.setSession(response);
       })
     );
   }
 
-  // 3. دالة تسجيل الخروج (لا تغيير هنا)
-  logout(): void {
-    localStorage.removeItem('auth_token');
-    this.currentUserSubject.next(null);
-    this.router.navigate(['/']);
-  }
 
-  // 4. دالة جلب بيانات المستخدم الحالي ("me") (تم تعديلها)
+  logout(): void {
+  this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+    next: () => {
+      localStorage.removeItem('auth_token');
+      this.currentUserSubject.next(null);
+      this.router.navigate(['/']);
+    },
+    error: () => {
+      localStorage.removeItem('auth_token');
+      this.currentUserSubject.next(null);
+      this.router.navigate(['/']);
+    }
+  });
+}
+
+
   getMe(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/me`).pipe(
       tap(responseFromServer => {
-        // ▼▼▼ هذا هو التعديل الرئيسي ▼▼▼
-        // ابحث عن كائن المستخدم في أي مكان محتمل في الرد
         const userObject = responseFromServer.data || responseFromServer.user || responseFromServer;
         console.log('User object found from /me endpoint:', userObject);
         this.currentUserSubject.next(userObject);
@@ -65,26 +69,25 @@ export class AuthService {
     );
   }
 
-  // ... باقي الدوال تبقى كما هي ...
   refreshToken(): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/refresh`, {}).pipe(
-      tap(response => localStorage.setItem('auth_token', response.token))
-    );
-  }
+  const refreshToken = localStorage.getItem('refresh_token'); // تأكد من حفظه عند تسجيل الدخول
+  return this.http.post<{ token: string }>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
+    tap(response => localStorage.setItem('auth_token', response.token))
+  );
+}
+
   forgotPassword(email: { email: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/forgot-password`, email);
   }
+
   resetPassword(data: { token: string; password_or_pin: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/reset-password`, data);
   }
 
-  // --- دوال مساعدة (تم تعديلها) ---
+
   private setSession(authResponse: AuthResponse) {
     if (authResponse.token) {
       localStorage.setItem('auth_token', authResponse.token);
-
-      // ▼▼▼ هذا هو التعديل الرئيسي ▼▼▼
-      // ابحث عن كائن المستخدم في أي مكان محتمل في الرد
       const userObject = authResponse.data?.user || authResponse.data || authResponse.user;
       console.log('Session set for user:', userObject);
       this.currentUserSubject.next(userObject);
@@ -99,4 +102,18 @@ export class AuthService {
       });
     }
   }
+
+
+  changePassword(data: { currentPassword: string; newPassword: string; confirmPassword: string }): Observable<any> {
+  return this.http.post(`${this.apiUrl}/change-password`, data);
+}
+
+
+verifyEmail(userId: string): Observable<any> {
+  return this.http.get(`${this.apiUrl}/verify-email/${userId}`);
+}
+
+resendVerification(): Observable<any> {
+  return this.http.post(`${this.apiUrl}/resend-verification`, {});
+}
 }

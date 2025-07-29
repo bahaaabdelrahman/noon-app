@@ -19,6 +19,7 @@ import { HomeComponent } from './home/home.component';
 import { SectionComponent } from './features/section/section.component';
 import { LoginDialogComponent } from './auth/login-dialog/login-dialog.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { ProductsModule } from './features/products/products.module';
 
 
 
@@ -40,6 +41,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserAnimationsModule,
     HttpClientModule,
     SharedModule,
+    ProductsModule,
 
 
     TranslateModule.forRoot({

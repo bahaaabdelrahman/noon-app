@@ -1,8 +1,7 @@
-// src/app/features/products/pages/product-list/product-list.component.ts
-
+import { Product } from '../../../../services/products.service';
 import { Component, OnInit } from '@angular/core';
-import { Product, ProductService } from '../../services/product.service';
 import { Observable, catchError, of } from 'rxjs';
+import { ProductService } from '../../../../services/products.service';
 
 
 @Component({
@@ -14,7 +13,6 @@ import { Observable, catchError, of } from 'rxjs';
 
 
 export class ProductListComponent implements OnInit {
-  // (1) سنستخدم async pipe، لذلك نوع المتغير سيكون Observable
   public products$!: Observable<Product[]>;
   public error: string | null = null;
 
@@ -23,10 +21,9 @@ export class ProductListComponent implements OnInit {
   ngOnInit(): void {
     this.products$ = this.productService.getProducts().pipe(
       catchError(err => {
-        // (2) التعامل مع الأخطاء
         this.error = "Failed to load products. Please try again later.";
         console.error(err);
-        return of([]); // إرجاع مصفوفة فارغة لتجنب كسر التطبيق
+        return of([]); 
       })
     );
   }

@@ -1,4 +1,4 @@
-// src/app/features/products/services/product.service.ts
+
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -22,6 +22,9 @@ export interface Product {
   providedIn: 'root'
 })
 export class ProductService {
+  title(arg0: string, title: any) {
+    throw new Error('Method not implemented.');
+  }
   private apiUrl = 'https://fakestoreapi.com';
 
   constructor(private http: HttpClient) { }

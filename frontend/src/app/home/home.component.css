@@ -1,4 +1,4 @@
-/* src/app/app.component.css */
+
 
 .top-bar {
   height: 4px;
@@ -57,7 +57,6 @@
 }
 
 .nav-icon mat-icon {
-  /* يضيف مسافة بين النص والأيقونة */
   margin-inline-start: 5px;
 }
 
@@ -66,12 +65,10 @@
   font-weight: 700;
 }
 
-/* --- الأنماط الجديدة التي أضفناها --- */
 .user-actions {
   display: flex;
   align-items: center;
   gap: 15px;
-  /* مسافة بين العناصر الداخلية (English, |, الدخول) */
 }
 
 .lang-switch {
@@ -96,10 +93,8 @@
   display: flex;
   align-items: center;
   gap: 25px;
-  /* مسافة بين اللوجو وقسم التوصيل */
 }
 
-/* (2) تنسيق قسم التوصيل نفسه */
 .delivery-info {
   display: flex;
   align-items: center;
@@ -109,30 +104,24 @@
   transition: opacity 0.3s ease-in-out;
 }
 
-/* (3) تنسيق أيقونة العلم */
 .flag-icon {
   width: 24px;
   height: auto;
   border: 1px solid #eee;
-  /* لإضافة إطار خفيف مثل موقع نون */
 }
 
-/* (4) تنسيق حاوية النص */
 .delivery-text {
   display: flex;
   flex-direction: column;
   line-height: 1.2;
-  /* لتقريب الأسطر من بعضها */
   text-align: right;
 }
 
-/* (5) تنسيق النص الصغير */
 .delivery-label {
   font-size: 12px;
   color: #666;
 }
 
-/* (6) تنسيق اسم المدينة */
 .delivery-city {
   font-size: 14px;
   font-weight: bold;
@@ -143,16 +132,13 @@
   opacity: 0.5;
 }
 
-/* (7) تنسيق أيقونة السهم */
 .delivery-info mat-icon {
   color: #888;
 }
 
 .logo-link {
-  /* للتأكد من أن الرابط يتصرف ككتلة ولا يضيف أي هوامش غير مرغوب فيها */
   display: block;
   line-height: 0;
-  /* لإزالة أي مسافة إضافية قد يضيفها الرابط حول الصورة */
 }
 
 
@@ -162,30 +148,24 @@
   display: flex;
   align-items: center;
   position: relative;
-  /* مساحة للأسهم على الجانبين */
   padding: 0 50px;
 }
 
-/* --- 2. الحاوية التي تخفي المحتوى الزائد --- */
 .categories-wrapper {
   flex-grow: 1;
   overflow: hidden;
   min-width: 0;
-  /* يخفي العناصر الزائدة */
 }
 
-/* --- 3. قائمة الأقسام نفسها --- */
 .categories-list {
   display: flex;
   list-style: none;
   margin: 0;
   padding: 0;
-  /* الانتقال السلس عند التمرير */
   transition: transform 0.4s ease-in-out;
 }
 
 .categories-nav-item {
-  /* يمنع العناصر من التقلص */
   flex-shrink: 0;
   pointer-events: auto;
 }
@@ -205,7 +185,6 @@
   border-bottom: 2px solid black;
 }
 
-/* --- 5. أسهم التمرير --- */
 
 .nav-arrow {
   position: absolute;

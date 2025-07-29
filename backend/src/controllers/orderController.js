@@ -73,8 +73,6 @@ const createOrder = catchAsync(async (req, res) => {
     }
   }
 
-
-
   // Prepare order items
   const orderItems = cart.items.map(item => ({
     product: item.product._id,
@@ -163,19 +161,24 @@ const getUserOrders = catchAsync(async (req, res) => {
     ...(status && { status }),
   });
 
-  res.status(200).json(ApiResponse.success({ 
-    count: orders.length,
-    total: totalOrders,
-    data: orders,
-    pagination: {
-      currentPage: parseInt(page),
-      totalPages: Math.ceil(totalOrders / parseInt(limit)),
-      totalItems: totalOrders,
-      itemsPerPage: parseInt(limit),
-      hasNext: page * limit < totalOrders,
-      hasPrev: page > 1,
-    }
-  }, 'Orders retrieved successfully'));
+  res.status(200).json(
+    ApiResponse.success(
+      {
+        count: orders.length,
+        total: totalOrders,
+        data: orders,
+        pagination: {
+          currentPage: parseInt(page),
+          totalPages: Math.ceil(totalOrders / parseInt(limit)),
+          totalItems: totalOrders,
+          itemsPerPage: parseInt(limit),
+          hasNext: page * limit < totalOrders,
+          hasPrev: page > 1,
+        },
+      },
+      'Orders retrieved successfully'
+    )
+  );
 });
 
 /**
@@ -203,11 +206,13 @@ const getOrder = catchAsync(async (req, res) => {
   }
 
   // Check authorization (user can only see their own orders unless admin)
-    if (!isAdmin && (!order.user || order.user.toString() !== userId)) {
+  if (!isAdmin && (!order.user || order.user.toString() !== userId)) {
     throw new NotFoundError('Order not found');
   }
 
-  res.status(200).json(ApiResponse.success(order, 'Order retrieved successfully'));
+  res
+    .status(200)
+    .json(ApiResponse.success(order, 'Order retrieved successfully'));
 });
 
 /**
@@ -229,7 +234,9 @@ const updateOrderStatus = catchAsync(async (req, res) => {
 
   await order.updateStatus(status, reason);
 
-  res.status(200).json(ApiResponse.success(order, 'Order status updated successfully'));
+  res
+    .status(200)
+    .json(ApiResponse.success(order, 'Order status updated successfully'));
 });
 
 /**
@@ -267,7 +274,9 @@ const cancelOrder = catchAsync(async (req, res) => {
 
   await order.updateStatus(ORDER_STATUS.CANCELLED, reason);
 
-  res.status(200).json(ApiResponse.success(order, 'Order cancelled successfully'));
+  res
+    .status(200)
+    .json(ApiResponse.success(order, 'Order cancelled successfully'));
 });
 
 /**
@@ -303,7 +312,9 @@ const requestRefund = catchAsync(async (req, res) => {
   order.refundReason = reason;
   await order.save();
 
-  res.status(200).json(ApiResponse.success(order, 'Refund request submitted successfully'));
+  res
+    .status(200)
+    .json(ApiResponse.success(order, 'Refund request submitted successfully'));
 });
 
 /**
@@ -330,7 +341,9 @@ const updatePaymentStatus = catchAsync(async (req, res) => {
     await order.updateStatus(ORDER_STATUS.CONFIRMED);
   }
 
-  res.status(200).json(ApiResponse.success(order, 'Payment status updated successfully'));
+  res
+    .status(200)
+    .json(ApiResponse.success(order, 'Payment status updated successfully'));
 });
 
 /**
@@ -354,19 +367,24 @@ const getAllOrders = catchAsync(async (req, res) => {
 
   const totalOrders = await Order.countDocuments(query);
 
-  res.status(200).json(ApiResponse.success({ 
-    count: orders.length,
-    total: totalOrders,
-    data: orders,
-    pagination: {
-      currentPage: parseInt(page),
-      totalPages: Math.ceil(totalOrders / parseInt(limit)),
-      totalItems: totalOrders,
-      itemsPerPage: parseInt(limit),
-      hasNext: page * limit < totalOrders,
-      hasPrev: page > 1,
-    }
-  }, 'Orders retrieved successfully'));
+  res.status(200).json(
+    ApiResponse.success(
+      {
+        count: orders.length,
+        total: totalOrders,
+        data: orders,
+        pagination: {
+          currentPage: parseInt(page),
+          totalPages: Math.ceil(totalOrders / parseInt(limit)),
+          totalItems: totalOrders,
+          itemsPerPage: parseInt(limit),
+          hasNext: page * limit < totalOrders,
+          hasPrev: page > 1,
+        },
+      },
+      'Orders retrieved successfully'
+    )
+  );
 });
 
 /**
@@ -387,7 +405,14 @@ const getOrderStats = catchAsync(async (req, res) => {
     { totalOrders: 0, totalRevenue: 0 }
   );
 
-  res.status(200).json(ApiResponse.success({ summary, byStatus: stats }, 'Order statistics retrieved successfully'));
+  res
+    .status(200)
+    .json(
+      ApiResponse.success(
+        { summary, byStatus: stats },
+        'Order statistics retrieved successfully'
+      )
+    );
 });
 
 /**
@@ -418,7 +443,11 @@ const addTrackingInfo = catchAsync(async (req, res) => {
   item.status = 'shipped';
   await order.save();
 
-  res.status(200).json(ApiResponse.success(order, 'Tracking information added successfully'));
+  res
+    .status(200)
+    .json(
+      ApiResponse.success(order, 'Tracking information added successfully')
+    );
 });
 
 module.exports = {

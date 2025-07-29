@@ -17,6 +17,10 @@ import { TranslateModule } from '@ngx-translate/core';
     ProductsRoutingModule,
     SharedModule ,
     TranslateModule
-  ]
+  ] ,
+  exports: [
+    ProductCardComponent,
+    ProductListComponent
+  ],
 })
 export class ProductsModule { }
