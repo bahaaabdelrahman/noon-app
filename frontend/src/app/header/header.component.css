@@ -1,0 +1,309 @@
+.top-bar {
+  height: 4px;
+  background-color: var(--noon-yellow);
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: var(--noon-yellow);
+  border-bottom: 1px solid #eee;
+}
+
+.logo {
+  height: 24px;
+}
+
+.nav-center {
+  flex-grow: 1;
+  margin-inline: 40px;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1.5px solid rgba(0, 0, 0, 0);
+  border-radius: 5px;
+  font-family: 'Cairo', sans-serif;
+  outline: none;
+}
+
+.search-bar:focus {
+  outline: 1px solid rgba(0, 0, 0, 0.306);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.nav-icon:hover {
+  opacity: 0.5;
+}
+
+.nav-icon mat-icon {
+  margin-inline-start: 5px;
+}
+
+.nav-icon span {
+  font-size: 1.089rem;
+  font-weight: 700;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.lang-switch {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--noon-dark);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.separator {
+  width: 1px;
+  height: 20px;
+  background-color: rgba(64, 69, 83, 0.2);
+}
+
+.page-container {
+  padding: 20px;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.delivery-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.flag-icon {
+  width: 24px;
+  height: auto;
+  border: 1px solid #eee;
+}
+
+.delivery-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  text-align: right;
+}
+
+.delivery-label {
+  font-size: 12px;
+  color: #666;
+}
+
+.delivery-city {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--noon-dark);
+}
+
+.delivery-info:hover {
+  opacity: 0.5;
+}
+
+.delivery-info mat-icon {
+  color: #888;
+}
+
+.logo-link {
+  display: block;
+  line-height: 0;
+}
+
+
+.categories-nav {
+  background-color: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 0 50px;
+}
+
+.categories-wrapper {
+  flex-grow: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.categories-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  transition: transform 0.4s ease-in-out;
+}
+
+.categories-nav-item {
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
+.categories-nav-item>a {
+  display: block;
+  padding: 14px 18px;
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.categories-nav-item:hover>a {
+  border-bottom: 2px solid black;
+}
+
+
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-arrow:hover {
+  background-color: #f5f5f5;
+}
+
+
+
+/* الوضع الافتراضي LTR */
+.nav-arrow.left-arrow {
+  left: 5px;
+}
+
+.nav-arrow.right-arrow {
+  right: 5px;
+}
+
+/* أضف لملف CSS هذا الشرط ليدعم RTL */
+html[dir="rtl"] .nav-arrow.left-arrow {
+  right: 5px;
+  left: auto;
+}
+
+html[dir="rtl"] .nav-arrow.right-arrow {
+  left: 5px;
+  right: auto;
+}
+
+
+
+/* تصميم القائمة وإخفاؤها بشكل افتراضي مع تجهيز الانتقال السلس */
+.mega-menu {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(15px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  width: auto;
+  background-color: #fff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  padding: 25px 0;
+  z-index: 1000;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* إظهار القائمة عند عمل Hover على عنصر القائمة الأب */
+.categories-nav-item.has-megamenu:hover .mega-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+
+/* --- 3. تنسيق المحتوى داخل القائمة الضخمة --- */
+.megamenu-content {
+  display: flex;
+  gap: 40px;
+  text-align: right;
+
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.megamenu-column {
+  flex: 1;
+}
+
+.megamenu-column:last-child {
+  flex: 0 0 200px;
+}
+
+.megamenu-column h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #000;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.megamenu-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.megamenu-column ul li a {
+  display: block;
+  padding: 8px 0;
+  color: #555;
+  font-size: 13px;
+  font-weight: normal;
+  transition: color 0.2s, padding-right 0.2s;
+}
+
+.megamenu-column ul li a:hover {
+  color: #5d9cec;
+  padding-right: 5px;
+}
+
+.megamenu-column img {
+  max-width: 100%;
+  border-radius: 4px;
+}

@@ -19,7 +19,6 @@ interface Slide {
 
 export class SliderComponent implements OnInit, OnDestroy {
 
-  // 1. تعريف مصفوفة الصور (الحالة)
   slides: Slide[] = [
     { src: 'https://f.nooncdn.com/mpcms/EN0003/assets/1b8d9d04-b908-4bde-9c25-58430134c9e0.png', alt: 'Summer Sale', title: 'عرض الصيف' },
     { src: 'https://f.nooncdn.com/mpcms/EN0003/assets/f73f01ed-1fd9-4941-b083-266981d654a8.png', alt: 'Electronics Deals', title: 'الإلكترونيات' },
@@ -30,27 +29,23 @@ export class SliderComponent implements OnInit, OnDestroy {
     { src: 'https://f.nooncdn.com/mpcms/EN0003/assets/e317e823-ebf5-41c8-8985-afe8b1c4a216.png', alt: 'New Fashion',title: ''}
   ];
 
-  // 2. متغير لتتبع الصورة الحالية
+
   currentSlide: number = 0;
 
-  // متغير لتخزين المؤقت الزمني
   private slideInterval: any;
 
   constructor() { }
 
-  // 3. استخدام OnInit لبدء السلايدر التلقائي عند تحميل المكون
   ngOnInit(): void {
     console.log('SliderComponent initialized');
     this.startAutoSlide();
   }
 
-  // 4. استخدام OnDestroy لإيقاف المؤقت عند إزالة المكون لمنع تسرب الذاكرة
   ngOnDestroy(): void {
     console.log('SliderComponent destroyed');
     this.stopAutoSlide();
   }
 
-  // 5. وظائف التنقل
   next(): void {
     this.currentSlide = (this.currentSlide + 1) % this.slides.length;
     this.resetInterval();
@@ -66,11 +61,10 @@ export class SliderComponent implements OnInit, OnDestroy {
     this.resetInterval();
   }
 
-  // 6. وظائف التحكم في المؤقت
   private startAutoSlide(): void {
     this.slideInterval = setInterval(() => {
         this.next();
-    }, 5000); // تغيير الصورة كل 5 ثوانٍ
+    }, 5000);
   }
 
   private stopAutoSlide(): void {

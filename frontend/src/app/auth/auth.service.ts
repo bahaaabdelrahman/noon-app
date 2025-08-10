@@ -85,14 +85,26 @@ export class AuthService {
   }
 
 
-  private setSession(authResponse: AuthResponse) {
-    if (authResponse.token) {
-      localStorage.setItem('auth_token', authResponse.token);
-      const userObject = authResponse.data?.user || authResponse.data || authResponse.user;
-      console.log('Session set for user:', userObject);
-      this.currentUserSubject.next(userObject);
+  private setSession(authResponse: any) {
+  const accessToken = authResponse?.data?.tokens?.accessToken;
+  const refreshToken = authResponse?.data?.tokens?.refreshToken;
+
+  if (accessToken) {
+    localStorage.setItem('auth_token', accessToken);
+
+    if (refreshToken) {
+      localStorage.setItem('refresh_token', refreshToken);
     }
+
+    const userObject = authResponse?.data?.user;
+    this.currentUserSubject.next(userObject);
+
+    console.log('SUCCESS: auth_token has been saved to localStorage.');
+
+  } else {
+    console.error('FAILURE: Could not find accessToken in login response.');
   }
+}
 
   private loadInitialUser() {
     const token = localStorage.getItem('auth_token');

@@ -86,49 +86,54 @@ export class LoginDialogComponent {
     this.loginForm.updateValueAndValidity();
   }
 
-  onSubmit(): void {
-    if (this.loginForm.invalid) {
-      if (this.loginForm.hasError('passwordMismatch')) {
-        this.errorMessage = 'Passwords do not match.';
-      }
-      return;
+  // في ملف login-dialog.component.ts
+
+onSubmit(): void {
+  if (this.loginForm.invalid) {
+    if (this.loginForm.hasError('passwordMismatch')) {
+      this.errorMessage = 'Passwords do not match.';
     }
-
-    this.isLoading = true;
-    this.errorMessage = null;
-
-    if (this.activeTab === 'login') {
-      const { email, password } = this.loginForm.value;
-      const credentials = { email, password };
-
-      this.authService.login(credentials).subscribe({
-        next: (response) => {
-          console.log('Login successful', response);
-          this.dialogRef.close(true);
-        },
-        error: (err) => {
-          this.errorMessage = err.error?.message || 'Login failed. Incorrect email or password.';
-          this.isLoading = false;
-        }
-      });
-    } else {
-      const { firstName, lastName, email, password, confirmPassword } = this.loginForm.value;
-      const registrationData = { firstName, lastName, email, password, confirmPassword };
-
-      this.authService.register(registrationData).subscribe({
-        next: (response) => {
-          console.log('Registration successful', response);
-          this.dialogRef.close(true);
-        },
-        error: (err) => {
-          if (err.error?.details && Array.isArray(err.error.details)) {
-            this.errorMessage = err.error.details.map((e: any) => e.message).join('. ');
-          } else {
-            this.errorMessage = err.error?.message || 'Registration failed. Please try again.';
-          }
-          this.isLoading = false;
-        }
-      });
-    }
+    return;
   }
+
+  this.isLoading = true;
+  this.errorMessage = null;
+
+  if (this.activeTab === 'login') {
+    const { email, password } = this.loginForm.value;
+    const credentials = { email, password };
+
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        console.log('Login successful, token saved. Reloading page to sync auth state...');
+
+        this.dialogRef.close(true);
+        window.location.reload();
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Login failed. Incorrect email or password.';
+        this.isLoading = false;
+      }
+    });
+  } else {
+    const { firstName, lastName, email, password, confirmPassword } = this.loginForm.value;
+    const registrationData = { firstName, lastName, email, password, confirmPassword };
+
+    this.authService.register(registrationData).subscribe({
+      next: (response) => {
+        console.log('Registration successful. Reloading page...');
+        this.dialogRef.close(true);
+        window.location.reload();
+      },
+      error: (err) => {
+        if (err.error?.details && Array.isArray(err.error.details)) {
+          this.errorMessage = err.error.details.map((e: any) => e.message).join('. ');
+        } else {
+          this.errorMessage = err.error?.message || 'Registration failed. Please try again.';
+        }
+        this.isLoading = false;
+      }
+    });
+  }
+}
 }

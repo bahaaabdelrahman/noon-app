@@ -1,4 +1,4 @@
-/* الكارد الرئيسي للنافذة المنبثقة */
+
 .login-dialog-card {
   padding: 24px !important;
   position: relative;
@@ -10,7 +10,6 @@
   overflow: visible;
 }
 
-/* زر الإغلاق X */
 .close-button {
   position: absolute;
   top: 8px;
@@ -18,7 +17,6 @@
   z-index: 10;
 }
 
-/* حاوية الصورة المتحركة */
 .image-container {
   height: 150px;
   margin-bottom: 16px;
@@ -32,7 +30,6 @@
   border-radius: 8px;
 }
 
-/* العنوان الرئيسي */
 .main-heading {
   font-size: 22px;
   font-weight: 700;
@@ -40,14 +37,12 @@
   text-align: center;
 }
 
-/* النموذج الذي يحتوي على كل شيء الآن */
 .login-form {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-/* أزرار التبديل (تسجيل الدخول / اشتراك) */
 .dialog-tabs {
   display: flex;
   padding: 3px;
@@ -81,21 +76,16 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* ▼▼▼ كود جديد ومحدث ▼▼▼ */
-/* حاوية لتقسيم الحقول في صف واحد */
 .form-row {
   display: flex;
   gap: 16px;
-  /* مسافة بين الحقلين */
   width: 100%;
 }
 
-/* لجعل الحقول تأخذ نصف المساحة داخل الصف */
 .half-width-field {
   flex: 1;
 }
 
-/* رسالة الخطأ العامة */
 .error-message {
   color: #f44336;
   font-size: 13px;
@@ -105,23 +95,19 @@
   min-height: 18px;
 }
 
-/* رسالة الخطأ الخاصة بـ Angular Material */
 mat-error {
   font-size: 12px;
 }
 
-/* ▲▲▲ نهاية الكود الجديد ▲▲▲ */
 
 
-/* حاوية زر المتابعة */
+
 .dialog-actions {
   width: 100%;
   padding: 0 !important;
   margin-top: 16px;
-  /* زيادة المسافة العلوية قليلاً */
 }
 
-/* زر المتابعة */
 .continue-button {
   width: 100%;
   padding: 12px 0 !important;

@@ -16,11 +16,17 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('auth_token');
+    const sessionId = this.getOrCreateSessionId();
 
     let authReq = req;
+
     if (token) {
       authReq = req.clone({
         headers: req.headers.set('Authorization', `Bearer ${token}`)
+      });
+    } else {
+      authReq = req.clone({
+        headers: req.headers.set('x-session-id', sessionId)
       });
     }
 
@@ -37,5 +43,14 @@ export class AuthInterceptor implements HttpInterceptor {
         return throwError(() => error);
       })
     );
+  }
+
+  private getOrCreateSessionId(): string {
+    let sessionId = localStorage.getItem('session_id');
+    if (!sessionId) {
+      sessionId = crypto.randomUUID();
+      localStorage.setItem('session_id', sessionId);
+    }
+    return sessionId;
   }
 }

@@ -1,0 +1,84 @@
+<header class="main-header">
+  <div class="top-bar"></div>
+  <nav class="main-nav">
+
+    <div class="nav-left">
+      <a routerLink="/" class="logo-link">
+        <img src="https://f.nooncdn.com/s/app/com/noon/design-system/logos/noon-logo-ar.svg" alt="Noon Logo"
+          class="logo">
+      </a>
+      <div class="delivery-info">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg" alt="Egypt Flag"
+          class="flag-icon">
+        <div class="delivery-text">
+          <span class="delivery-label">{{ 'DELIVERY_TO' | translate }}</span>
+          <span class="delivery-city">{{ 'CAIRO' | translate }}</span>
+        </div>
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </div>
+    </div>
+
+    <div class="nav-center">
+      <input type="text" [placeholder]="'SEARCH_PLACEHOLDER' | translate" class="search-bar">
+    </div>
+
+    <div class="nav-right">
+      <div class="user-actions">
+        <a class="lang-switch" (click)="switchLanguage()">
+          {{ currentLang === 'ar' ? ('ENGLISH' | translate) : ('ARABIC' | translate) }}
+        </a>
+        <div class="separator"></div>
+        <div class="nav-icon" (click)="openLoginDialog()">
+          <span>{{ 'LOGIN' | translate }}</span>
+          <mat-icon>person_outline</mat-icon>
+        </div>
+      </div>
+      <div class="separator"></div>
+      <div class="nav-icon" routerLink="/wishlists">
+        <span>{{ 'WISHLIST' | translate }}</span>
+        <mat-icon>favorite_border</mat-icon>
+      </div>
+      <div class="nav-icon" routerLink="/cart">
+        <span>{{ 'CART' | translate }}</span>
+        <mat-icon>shopping_cart_outline</mat-icon>
+      </div>
+    </div>
+  </nav>
+
+  <nav class="categories-nav">
+
+    <button *ngIf="showLeftArrow" class="nav-arrow left-arrow" (click)="scrollLeft()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <div class="categories-wrapper" #categoriesWrapper (scroll)="onCategoriesScroll()">
+      <ul class="categories-list" #categoriesList>
+        <li class="categories-nav-item has-megamenu" *ngFor="let category of categories$ | async">
+          <a [routerLink]="['/category', category.slug]">{{ category.name }}</a>
+          <div class="mega-menu" *ngIf="category.subcategories && category.subcategories.length > 0">
+            <div class="megamenu-content">
+              <div class="megamenu-column" *ngFor="let subCategory of category.subcategories">
+                <h4>
+                  <a [routerLink]="['/category', subCategory.slug]">{{ subCategory.name }}</a>
+                </h4>
+                <ul *ngIf="subCategory.subcategories && subCategory.subcategories.length > 0">
+                  <li *ngFor="let grandChild of subCategory.subcategories">
+                    <a [routerLink]="['/category', grandChild.slug]">{{ grandChild.name }}</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="megamenu-column" *ngIf="category.image && category.image.url">
+                <img [src]="category.image.url" [alt]="category.name + ' Offer'">
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <button *ngIf="showRightArrow" class="nav-arrow right-arrow" (click)="scrollRight()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+  </nav>
+</header>

@@ -1,0 +1,81 @@
+<div class="cart-page-container" *ngIf="cartState$ | async as cart; else loading">
+
+  <div class="cart-content" *ngIf="cart?.items && cart.items.length > 0; else emptyCartTemplate">
+
+    <div class="cart-items-column">
+
+      <div class="cart-header">
+        <h2>Shopping Cart ({{ cart.totalQuantity || 0 }} items)</h2>
+        <button mat-stroked-button color="warn" (click)="clearCart()">
+          <mat-icon>remove_shopping_cart</mat-icon>
+          Clear Cart
+        </button>
+      </div>
+
+      <div *ngFor="let item of cart.items || []" class="cart-item-card">
+        <img [src]="item.product?.mainImage?.url || 'assets/placeholder.png'" [alt]="item.product?.name"
+          class="item-image">
+
+        <div class="item-details">
+          <p class="item-name">{{ item.product?.name }}</p>
+          <div class="quantity-controls">
+            <button mat-icon-button (click)="updateQuantity(item._id, item.quantity + 1)">
+              <mat-icon>add</mat-icon>
+            </button>
+            <span>{{ item.quantity }}</span>
+            <button mat-icon-button (click)="updateQuantity(item._id, item.quantity - 1)"
+              [disabled]="item.quantity === 1">
+              <mat-icon>remove</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="item-actions">
+          <p class="item-price">{{ item.totalPrice | currency:'EGP ' }}</p>
+          <button mat-icon-button class="delete-button" (click)="removeItem(item._id)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+          <!-- الخطوة 4: تحديث استدعاء الوظيفة لتمرير كلا المعرفين -->
+          <button mat-icon-button class="favorite-button" (click)="addToWishlist(item.product?._id, item._id)">
+            <mat-icon>favorite_border</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-summary-column">
+      <h3>Order Summary</h3>
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>{{ cart.totalPrice | currency:'EGP ' }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping Fee</span>
+        <span class="free-shipping">Free</span>
+      </div>
+      <div class="summary-row total">
+        <strong>Total (incl. VAT)</strong>
+        <strong>{{ cart.totalPrice | currency:'EGP ' }}</strong>
+      </div>
+      <button mat-flat-button color="primary" class="checkout-button">
+        Proceed to Checkout {{ cart.totalPrice | currency:'EGP ' }}
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="status-container">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>
+
+<ng-template #emptyCartTemplate>
+  <div class="status-container">
+    <mat-icon class="empty-cart-icon">shopping_cart_off</mat-icon>
+    <h1>Your cart is empty!</h1>
+    <p>Browse our products and add what you like to start shopping.</p>
+    <a mat-stroked-button color="primary" routerLink="/">Back to Home</a>
+  </div>
+</ng-template>

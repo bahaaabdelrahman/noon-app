@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatBadgeModule } from '@angular/material/badge';
 
 
 import { SharedModule } from './shared/shared.module';
@@ -20,6 +21,11 @@ import { SectionComponent } from './features/section/section.component';
 import { LoginDialogComponent } from './auth/login-dialog/login-dialog.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { ProductsModule } from './features/products/products.module';
+import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { CartComponent } from './cart/cart.component';
+import { HeaderComponent } from './header/header.component';
+import { WishlistComponent } from './wishlist/wishlist.component';
+// import { CategoryProductsComponent } from './category-products/category-products.component';
 
 
 
@@ -34,6 +40,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     HomeComponent,
     SectionComponent,
     LoginDialogComponent,
+    ProductDetailComponent,
+    CartComponent,
+    HeaderComponent,
+    WishlistComponent,
+    // CategoryProductsComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +53,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     SharedModule,
     ProductsModule,
+    MatBadgeModule,
 
 
     TranslateModule.forRoot({

@@ -1,0 +1,75 @@
+
+
+
+<div class="product-detail-container">
+  <ng-container *ngIf="product$ | async as product; else loadingOrError">
+    <div *ngIf="product" class="product-layout">
+
+      <div class="product-images">
+          <div class="main-image-container">
+            <img [src]="selectedImage || product.mainImage?.url" [alt]="product.name" class="main-image" />
+
+            <button class="arrow left" (click)="prevImage()" [disabled]="currentIndex === 0">
+              &#10094;
+            </button>
+
+            <button class="arrow right" (click)="nextImage()" [disabled]="currentIndex === allImages.length - 1">
+              &#10095;
+            </button>
+          </div>
+
+
+        <!-- الصور المصغرة -->
+        <div class="thumbnail-container" *ngIf="product.images?.length > 0">
+          <img *ngFor="let image of product.images" [src]="image.url" (click)="selectImage(image.url)"
+            [class.active]="(selectedImage || product.mainImage?.url) === image.url" class="thumbnail" />
+        </div>
+      </div>
+
+      <div class="product-info-main">
+        <h1 class="product-title">{{ product.name }}</h1>
+
+        <div class="rating-section" *ngIf="product.rating?.count > 0">
+          <span class="stars">★★★★☆</span>
+          <span class="rating-count">({{ product.rating.count }} ratings)</span>
+        </div>
+
+        <hr>
+
+        <div class="product-pricing">
+          <span class="current-price">{{ product.pricing?.price | currency:'EGP ' }}</span>
+          <span *ngIf="product.pricing?.comparePrice > product.pricing?.price" class="original-price">
+            {{ product.pricing?.comparePrice | currency:'EGP ' }}
+          </span>
+        </div>
+
+        <div class="product-stock" [class.out-of-stock]="product.inventory?.quantity === 0">
+          {{ product.inventory?.quantity > 0 ? 'In Stock' : 'Out of Stock' }}
+        </div>
+
+        <p class="product-description">{{ product.description }}</p>
+
+        <button mat-flat-button color="primary" class="add-to-cart-button" (click)="addToCart(product)"
+          [disabled]="product.inventory?.quantity === 0">
+          <mat-icon>add_shopping_cart</mat-icon>
+          Add to Cart
+        </button>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <ng-template #loadingOrError>
+    <div *ngIf="error; else loading" class="status-message error">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+      <a mat-stroked-button routerLink="/">Back to Home</a>
+    </div>
+    <ng-template #loading>
+      <div class="status-message">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>
+

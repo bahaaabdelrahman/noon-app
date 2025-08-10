@@ -1,0 +1,41 @@
+<!-- <div class="page-container">
+
+  <h1 class="category-title" *ngIf="!isLoading && !error">{{ categoryName | titlecase }}</h1>
+  <p class="product-count" *ngIf="!isLoading && !error">{{ productsToDisplay.length }} Products Found</p>
+
+  <div *ngIf="isLoading" class="status-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading Products...</p>
+  </div>
+
+  <div *ngIf="error" class="status-container error-message">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!isLoading && productsToDisplay.length === 0 && !error" class="status-container no-products">
+    <mat-icon>search_off</mat-icon>
+    <p>Sorry, no products found in this category.</p>
+  </div>
+
+  <div *ngIf="!isLoading && productsToDisplay.length > 0" class="products-grid">
+
+    <mat-card class="product-card" *ngFor="let product of productsToDisplay">
+      <img mat-card-image [src]="product.image?.url || 'https://via.placeholder.com/300'" [alt]="product.name">
+
+      <mat-card-content>
+        <h3 class="product-name" title="{{ product.name }}">{{ product.name }}</h3>
+        <p class="product-price">{{ product.price | currency:'EGP ' }}</p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-flat-button color="primary" class="add-to-cart-btn">
+          <mat-icon>add_shopping_cart</mat-icon>
+          <span>ADD TO CART</span>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+  </div>
+
+</div> -->

@@ -1,0 +1,29 @@
+<div class="wishlist-page">
+  <h2 class="wishlist-title">{{ wishlistName }}</h2>
+
+  <div *ngIf="loading" class="loading-indicator">
+    <p>⏳ جار التحميل...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && products.length > 0" class="products-grid">
+    <div *ngFor="let product of products" class="product-card">
+      <img [src]="product.mainImage?.url || 'assets/default-product.png'" [alt]="product.name" class="product-image">
+      <div class="product-info">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-price">{{ product.price | currency:'EGP' }}</p>
+        <button (click)="removeProduct(product._id)" class="remove-button" title="إزالة من القائمة">
+          🗑️ إزالة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !errorMessage && products.length === 0" class="empty-wishlist">
+    <p>🛍️ قائمة أمنياتك فارغة حاليًا.</p>
+    <a routerLink="/" class="shop-now-button">تسوق الآن</a>
+  </div>
+</div>
